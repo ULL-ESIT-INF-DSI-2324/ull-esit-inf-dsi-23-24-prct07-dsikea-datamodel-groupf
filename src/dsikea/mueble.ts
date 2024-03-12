@@ -38,4 +38,24 @@ export abstract class Mueble {
   get precio() {
     return this._precio;
   }
+
+  set nombre(nombre: string) {
+    this._nombre = nombre;
+  }
+
+  set descripcion(descripcion: string) {
+    this._descripcion = descripcion;
+  }
+
+  set material(material: string) {
+    this._material = material;
+  }
+
+  set dimensiones(dimensiones: string) {
+    this._dimensiones = dimensiones;
+  }
+
+  set precio(precio: number) {
+    this._precio = precio;
+  }
 }

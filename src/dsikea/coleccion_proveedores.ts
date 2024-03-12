@@ -11,11 +11,23 @@ export class ColeccionProveedores {
 		}
 	}
 
+	get proveedores(): Proveedor[] {
+		return this._proveedores;
+	}
+
+
+	
 	addProveedor(proveedor: Proveedor): void {
 		this._proveedores.push(proveedor);
 	}
-	get proveedores(): Proveedor[] {
-			return this._proveedores;
+
+	removeProveedorById(id :number): void {
+		const index = this._proveedores.findIndex(proveedor => proveedor.id === id);
+		if (index > -1) {
+			this._proveedores.splice(index, 1);
+		} else {
+			throw new Error('No se ha encontrado el proveedor con el id proporcionado');
+		}
 	}
 
 	searchByName(nombre: string): Proveedor[] {

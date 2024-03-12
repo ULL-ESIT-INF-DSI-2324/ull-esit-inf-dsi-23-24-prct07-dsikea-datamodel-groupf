@@ -1,4 +1,4 @@
-import inquirer from 'inquirer';
+/*import inquirer from 'inquirer';
 import { ColeccionMuebles } from './coleccion_muebles.js';
 import { Silla } from './silla.js';
 import { Comoda } from './comoda.js';
@@ -230,3 +230,4 @@ async function gestionarClientes() {
 
 // Iniciar la aplicación
 main();
+*/

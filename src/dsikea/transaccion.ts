@@ -1,5 +1,5 @@
 export interface Transaccion {
-	date: string;
+	date: Date;
 	id_mueble: number;
 	id_implicado : number;
 	type: 'Compra' | 'Venta' | 'Devolución de Cliente' | 'Devolución a Proveedor';

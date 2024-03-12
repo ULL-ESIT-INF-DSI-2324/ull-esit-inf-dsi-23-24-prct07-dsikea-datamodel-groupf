@@ -11,12 +11,22 @@ export class ColeccionClientes {
 		}
 	}
 
+	
+	get clientes(): Cliente[] {
+		return this._clientes;
+	}
+	
 	addCliente(cliente: Cliente): void {
 		this._clientes.push(cliente);
 	}
 
-	get clientes(): Cliente[] {
-		return this._clientes;
+	removeClienteById(id :number): void {
+		const index = this._clientes.findIndex(cliente => cliente.id === id);
+		if (index > -1) {
+			this._clientes.splice(index, 1);
+		} else {
+			throw new Error('No se ha encontrado el cliente con el id proporcionado');
+		}
 	}
 
 	searchByName(nombre: string): Cliente[] {

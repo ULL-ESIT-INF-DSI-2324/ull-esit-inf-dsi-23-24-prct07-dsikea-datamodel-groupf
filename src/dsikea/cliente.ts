@@ -26,4 +26,16 @@ export class Cliente {
 	get direccion() {
 		return this._direccion;
 	}
+
+	set nombre(nombre: string) {
+		this._nombre = nombre;
+	}
+
+	set contacto(contacto: string) {
+		this._contacto = contacto;
+	}
+
+	set direccion(direccion: string) {
+		this._direccion = direccion;
+	}
 }
