@@ -21,12 +21,21 @@ export class Stock {
 	private _db: lowdb.LowdbSync<DBStock>;
 	private _stock: DBStock;
 	
+  private static StockInstance: Stock;
+
 	constructor() {
 		this._db = lowdb(new FileSync("stock.json"));
 	}
 
+  public static getInstance(): Stock {
+    if (!Stock.StockInstance) {
+      Stock.StockInstance = new Stock();
+    }
+    return Stock.StockInstance;
+  }
+
   get db() {
-    return this._db;
+    return Stock.StockInstance._db;
   }
 	
 }
