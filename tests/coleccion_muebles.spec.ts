@@ -9,8 +9,9 @@ import { Silla } from '../src/dsikea/silla.js';
 
 import { ColeccionMuebles } from '../src/dsikea/coleccion_muebles.js';
 
-describe('Test de la clase coleccion_muebles', () => {
+describe('Test de la clase ColecciónMuebles', () => {
 	let coleccion: ColeccionMuebles;
+	let coleccion_vacía: ColeccionMuebles;
 	let mueble1: Armario;
 	let mueble2: Armario;
 	let mueble3: Armario;
@@ -46,7 +47,7 @@ describe('Test de la clase coleccion_muebles', () => {
 		'Madera', '180 cm de ancho x 220 cm de alto x 65 cm de profundidad.', 900, 5);
 
 		mueble6 = new Comoda(6, 'Moderna Minimalista', 'Una cómoda elegante y minimalista con líneas limpias y acabado brillante.', 
-		'Madera', '100X90X50(cm)', 300, 4);
+		'Madera', '120 cm de ancho x 80 cm de alto x 45 cm de profundidad', 300, 4);
 		mueble7 = new Comoda(7, 'Vintage Chic', 'Una cómoda vintage con encanto, detalles tallados a mano y patas torneadas.', 
 		'Madera', '100 cm de ancho x 90 cm de alto x 50 cm de profundidad', 250, 6);
 		mueble8 = new Comoda(8, 'Industrial Loft', 'Una cómoda robusta y urbana inspirada en el estilo industrial, con detalles de metal negro y acabado envejecido.',
@@ -82,6 +83,7 @@ describe('Test de la clase coleccion_muebles', () => {
 																			[mueble6, 4], [mueble7, 6], [mueble8, 5], [mueble9, 7], [mueble10, 8], 
 																			[mueble11, 6], [mueble12, 2], [mueble13, 3], [mueble14, 2], [mueble15, 2], 
 																			[mueble16, 2], [mueble17, 4], [mueble18, 8], [mueble19, 12], [mueble20, 4]]);
+		coleccion_vacía = new ColeccionMuebles();
 	});
 
 	it('Se crea una colección de muebles', () => {
@@ -124,6 +126,7 @@ describe('Test de la clase coleccion_muebles', () => {
 		const cantidad = 2;
 		coleccion.addMuebleById(muebleId, cantidad);
 		expect(coleccion.muebles[muebleId - 1][1]).to.equal(5);
+		expect(() => coleccion.addMuebleById(48, 1)).to.throw(Error);
 	});
 
 	it('Se elimina un mueble de la colección por su id', () => {
@@ -131,6 +134,7 @@ describe('Test de la clase coleccion_muebles', () => {
 		const cantidad = 2;
 		coleccion.removeMuebleById(muebleId, cantidad);
 		expect(coleccion.muebles[muebleId - 1][1]).to.equal(2);
+		coleccion.removeMuebleById(muebleId, cantidad);
 	});
 
 	it('Se busca un mueble por su nombre', () => {
