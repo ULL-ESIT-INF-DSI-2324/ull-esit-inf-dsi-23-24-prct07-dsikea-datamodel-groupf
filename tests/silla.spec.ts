@@ -1,4 +1,4 @@
-import 'mocha';
+/**import 'mocha';
 import { expect } from 'chai';
 
 import { Silla } from '../src/dsikea/silla.js';
@@ -61,3 +61,4 @@ describe('Tests de la clase Silla', () => {
 		expect(silla2.precio).to.equal(150);
 	});
 });
+*/

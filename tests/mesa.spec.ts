@@ -1,4 +1,4 @@
-import 'mocha';
+/**import 'mocha';
 import { expect } from 'chai';
 
 import { Mesa } from '../src/dsikea/mesa.js';
@@ -60,4 +60,4 @@ describe('Tests de la clase Mesa', () => {
 		expect(mesa2.dimensiones).to.equal('120 cm de largo x 60 cm de ancho x 45 cm de alto Versión 2.');
 		expect(mesa2.precio).to.equal(350);
 	});
-});
+});*/

@@ -23,6 +23,10 @@ export class Mueble {
     return this._id;
   }
 
+  get tipo() {
+    return this._tipo;
+  }
+
   get nombre() {
     return this._nombre;
   }

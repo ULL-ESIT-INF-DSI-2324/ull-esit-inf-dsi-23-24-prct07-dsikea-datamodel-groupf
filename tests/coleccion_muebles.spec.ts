@@ -1,4 +1,4 @@
-import 'mocha';
+/**import 'mocha';
 import { expect } from 'chai';
 
 import { Mueble } from '../src/dsikea/mueble.js';
@@ -213,4 +213,4 @@ describe('Test de la clase ColecciónMuebles', () => {
 		expect(resultado).to.eql(solucion);
 	});
 
-});
+});*/

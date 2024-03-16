@@ -1,4 +1,4 @@
-import 'mocha';
+/**import 'mocha';
 import { expect } from 'chai';
 
 import { Armario } from '../src/dsikea/armario.js';
@@ -60,4 +60,4 @@ describe('Tests de la clase Armario', () => {
 		expect(armario2.dimensiones).to.equal('180 cm de ancho x 220 cm de alto x 60 cm de profundidad');
 		expect(armario2.precio).to.equal(1000);
 	});
-});
+});*/

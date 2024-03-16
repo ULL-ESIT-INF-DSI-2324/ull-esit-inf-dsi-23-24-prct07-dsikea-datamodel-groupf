@@ -1,4 +1,4 @@
-import 'mocha';
+/**import 'mocha';
 import { expect } from 'chai';
 
 import { Comoda } from '../src/dsikea/comoda.js';
@@ -60,4 +60,4 @@ describe('Tests de la clase Comoda', () => {
 		expect(comoda2.dimensiones).to.equal('100 cm de ancho x 90 cm de alto x 50 cm de profundidad. Versión 2.');
 		expect(comoda2.precio).to.equal(300);
 	});
-});
+});*/

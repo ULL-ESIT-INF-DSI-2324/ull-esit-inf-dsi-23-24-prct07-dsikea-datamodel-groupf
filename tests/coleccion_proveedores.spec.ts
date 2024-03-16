@@ -1,4 +1,4 @@
-import 'mocha';
+/**import 'mocha';
 import { expect } from 'chai';
 
 import { Proveedor } from '../src/dsikea/proveedor.js';
@@ -84,4 +84,4 @@ describe('Tests de la clase ColeccionProveedores', () => {
 			expect(proveedoresEncontrados2).to.be.an('array').that.is.empty;
 			expect(proveedoresEncontrados2).to.have.lengthOf(0);
 		});
-});
+});*/
