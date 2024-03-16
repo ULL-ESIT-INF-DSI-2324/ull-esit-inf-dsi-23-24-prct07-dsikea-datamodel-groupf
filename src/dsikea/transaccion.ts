@@ -3,5 +3,6 @@ export interface Transaccion {
 	id_mueble: number;
 	id_implicado : number;
 	type: 'Compra' | 'Venta' | 'Devolución de Cliente' | 'Devolución a Proveedor';
+	num_productos :number;
 	amount: number;
 }

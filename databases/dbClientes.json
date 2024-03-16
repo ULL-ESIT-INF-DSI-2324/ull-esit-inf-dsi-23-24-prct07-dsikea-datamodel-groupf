@@ -1,6 +1,34 @@
 {
-  "clientes": {
-    "_clientes": []
-  },
-  "Clientes": []
+  "Clientes": [
+    {
+      "_id": 1,
+      "_nombre": "Juan Pérez",
+      "_contacto": "juanp@gmail.com",
+      "_direccion": "Calle Falsa 123"
+    },
+    {
+      "_id": 2,
+      "_nombre": "María López",
+      "_contacto": "987654321",
+      "_direccion": "Calle Falsa 321"
+    },
+    {
+      "_id": 3,
+      "_nombre": "Pepe García",
+      "_contacto": "123456789",
+      "_direccion": "Calle Falsa 123"
+    },
+    {
+      "_id": 4,
+      "_nombre": "Ana Martínez",
+      "_contacto": "anam@gmail.com",
+      "_direccion": "Calle Falsa 654"
+    },
+    {
+      "_id": 5,
+      "_nombre": "Luis Rodríguez",
+      "_contacto": "555555555",
+      "_direccion": "Calle Falsa 555"
+    }
+  ]
 }

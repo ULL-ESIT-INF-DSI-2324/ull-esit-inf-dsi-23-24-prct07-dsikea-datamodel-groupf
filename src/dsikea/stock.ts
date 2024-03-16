@@ -91,17 +91,18 @@ export class Stock {
     const mueblesArray = dbMuebles.get("Muebles");
     const mueble = mueblesArray.find({ _nombre: nombre }).value();
     if (mueble) {
+      const mueblesConNombre = mueblesArray.filter(mueble => mueble._nombre === nombre).value();
       if (alfabeticamente) {
         if (ascendente) {
-          return mueblesArray.sortBy('_nombre').value();
+          return mueblesConNombre.sort((a, b) => a._nombre.localeCompare(b._nombre));
         } else {
-          return mueblesArray.sortBy('_nombre').reverse().value();
+          return mueblesConNombre.sort((a, b) => b._nombre.localeCompare(a._nombre));
         }
       } else {
         if (ascendente) {
-          return mueblesArray.sortBy('_precio').value();
+          return mueblesConNombre.sort((a, b) => a._precio - b._precio);
         } else {
-          return mueblesArray.sortBy('_precio').reverse().value();
+          return mueblesConNombre.sort((a, b) => b._precio - a._precio);
         }
       }
     } else {
@@ -113,18 +114,19 @@ export class Stock {
     const dbMuebles = this._db.getDBMuebles();
     const mueblesArray = dbMuebles.get("Muebles");
     const mueble = mueblesArray.find({ _tipo: tipo }).value();
-    if (mueble) {
+    if (mueble !== undefined) {
+      const mueblesConTipo = mueblesArray.filter(mueble => mueble._tipo === tipo).value();
       if (alfabeticamente) {
         if (ascendente) {
-          return mueblesArray.sortBy('_nombre').value();
+          return mueblesConTipo.sort((a, b) => a._nombre.localeCompare(b._nombre));
         } else {
-          return mueblesArray.sortBy('_nombre').reverse().value();
+          return mueblesConTipo.sort((a, b) => b._nombre.localeCompare(a._nombre));
         }
       } else {
         if (ascendente) {
-          return mueblesArray.sortBy('_precio').value();
+          return mueblesConTipo.sort((a, b) => a._precio - b._precio);
         } else {
-          return mueblesArray.sortBy('_precio').reverse().value();
+          return mueblesConTipo.sort((a, b) => b._precio - a._precio);
         }
       }
     } else {
@@ -135,25 +137,20 @@ export class Stock {
   buscarMuebleByKeyWordsDescripcion(keyWords: string, alfabeticamente: boolean, ascendente: boolean) {
     const dbMuebles = this._db.getDBMuebles();
     const mueblesArray = dbMuebles.get("Muebles");
-    const mueble = mueblesArray.find((mueble: Mueble) => {
-      return mueble._descripcion.includes(keyWords);
-    }).value();
-    if (mueble) {
-      if (alfabeticamente) {
-        if (ascendente) {
-          return mueblesArray.sortBy('_nombre').value();
-        } else {
-          return mueblesArray.sortBy('_nombre').reverse().value();
-        }
+    const muebles = mueblesArray.value();
+    const mueblesConKeyWords = muebles.filter(mueble => mueble._descripcion.includes(keyWords));
+    if (alfabeticamente) {
+      if (ascendente) {
+        return mueblesConKeyWords.sort((a, b) => a._nombre.localeCompare(b._nombre));
       } else {
-        if (ascendente) {
-          return mueblesArray.sortBy('_precio').value();
-        } else {
-          return mueblesArray.sortBy('_precio').reverse().value();
-        }
+        return mueblesConKeyWords.sort((a, b) => b._nombre.localeCompare(a._nombre));
       }
     } else {
-      throw new Error('No se ha encontrado el mueble con la descripción proporcionada');
+      if (ascendente) {
+        return mueblesConKeyWords.sort((a, b) => a._precio - b._precio);
+      } else {
+        return mueblesConKeyWords.sort((a, b) => b._precio - a._precio);
+      }
     }
   }
 
@@ -188,7 +185,7 @@ export class Stock {
   buscarProveedorByNombre(nombre: string) {
     const dbProveedores = this._db.getDBProveedores();
     const proveedoresArray = dbProveedores.get("Proveedores");
-    const proveedor = proveedoresArray.find({ _nombre: nombre }).value();
+    const proveedor = proveedoresArray.filter(proveedor => proveedor._nombre === nombre).value();
     if (proveedor) {
       return proveedor;
     } else {
@@ -199,7 +196,7 @@ export class Stock {
   buscarProveedorByContacto(contacto: string) {
     const dbProveedores = this._db.getDBProveedores();
     const proveedoresArray = dbProveedores.get("Proveedores");
-    const proveedor = proveedoresArray.find({ _contacto: contacto }).value();
+    const proveedor = proveedoresArray.filter(proveedor => proveedor._contacto === contacto).value();
     if (proveedor) {
       return proveedor;
     } else {
@@ -210,7 +207,7 @@ export class Stock {
   buscarProveedorByDireccion(direccion: string) {
     const dbProveedores = this._db.getDBProveedores();
     const proveedoresArray = dbProveedores.get("Proveedores");
-    const proveedor = proveedoresArray.find({ _direccion: direccion }).value();
+    const proveedor = proveedoresArray.filter(proveedor => proveedor._direccion === direccion).value();
     if (proveedor) {
       return proveedor;
     } else {
@@ -249,7 +246,7 @@ export class Stock {
   buscarClienteByNombre(nombre: string) {
     const dbClientes = this._db.getDBClientes();
     const clientesArray = dbClientes.get("Clientes");
-    const cliente = clientesArray.find({ _nombre: nombre }).value();
+    const cliente = clientesArray.filter(cliente => cliente._nombre === nombre).value();
     if (cliente) {
       return cliente;
     } else {
@@ -260,7 +257,7 @@ export class Stock {
   buscarClienteByContacto(contacto: string) {
     const dbClientes = this._db.getDBClientes();
     const clientesArray = dbClientes.get("Clientes");
-    const cliente = clientesArray.find({ _contacto: contacto }).value();
+    const cliente = clientesArray.filter(cliente => cliente._contacto === contacto).value();
     if (cliente) {
       return cliente;
     } else {
@@ -271,7 +268,7 @@ export class Stock {
   buscarClienteByDireccion(direccion: string) {
     const dbClientes = this._db.getDBClientes();
     const clientesArray = dbClientes.get("Clientes");
-    const cliente = clientesArray.find({ _direccion: direccion }).value();
+    const cliente = clientesArray.filter(cliente => cliente._direccion === direccion).value();
     if (cliente) {
       return cliente;
     } else {
@@ -292,6 +289,7 @@ export class Stock {
       id_mueble: idMueble,
       id_implicado: idCliente,
       type: 'Venta',
+      num_productos: cantidad,
       amount: importe
     };
     this._db.addNewTransaccion(transaccion);
@@ -310,6 +308,7 @@ export class Stock {
       id_mueble: idMueble,
       id_implicado: idProveedor,
       type: 'Compra',
+      num_productos: cantidad,
       amount: importe
     };
     this._db.addNewTransaccion(transaccion);
@@ -328,6 +327,7 @@ export class Stock {
       id_mueble: idMueble,
       id_implicado: idCliente,
       type: 'Devolución de Cliente',
+      num_productos: cantidad,
       amount: importe
     };
     this._db.addNewTransaccion(transaccion);
@@ -346,6 +346,7 @@ export class Stock {
       id_mueble: idMueble,
       id_implicado: idProveedor,
       type: 'Devolución a Proveedor',
+      num_productos: cantidad,
       amount: importe
     };
     this._db.addNewTransaccion(transaccion);

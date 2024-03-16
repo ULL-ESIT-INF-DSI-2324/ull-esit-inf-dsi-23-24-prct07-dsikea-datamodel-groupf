@@ -128,7 +128,7 @@
       "_material": "Metal",
       "_dimensiones": "60 cm de diámetro x 55 cm de alto",
       "_precio": 150,
-      "_cantidad": 33
+      "_cantidad": 29
     },
     {
       "_id": 14,
@@ -188,7 +188,7 @@
       "_material": "Mimbre",
       "_dimensiones": "50 cm de ancho x 95 cm de alto x 45 cm de profundidad",
       "_precio": 80,
-      "_cantidad": 2
+      "_cantidad": 8
     },
     {
       "_id": 20,
@@ -198,7 +198,7 @@
       "_material": "Metal",
       "_dimensiones": "40 cm de ancho x 85 cm de alto x 40 cm de profundidad",
       "_precio": 80,
-      "_cantidad": 64
+      "_cantidad": 60
     }
   ]
 }

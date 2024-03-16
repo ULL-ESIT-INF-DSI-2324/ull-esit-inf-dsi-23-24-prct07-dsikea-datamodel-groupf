@@ -1,6 +1,34 @@
 {
-  "proveedores": {
-    "_proveedores": []
-  },
-  "Proveedores": []
+  "Proveedores": [
+    {
+      "_id": 1,
+      "_nombre": "Proveedor 1",
+      "_contacto": "177784894",
+      "_direccion": "Direccion 1"
+    },
+    {
+      "_id": 2,
+      "_nombre": "Proveedor 2",
+      "_contacto": "prov2@gmail.com",
+      "_direccion": "Direccion 2"
+    },
+    {
+      "_id": 3,
+      "_nombre": "Proveedor 3",
+      "_contacto": "777777777",
+      "_direccion": "Direccion 3"
+    },
+    {
+      "_id": 4,
+      "_nombre": "Proveedor 4",
+      "_contacto": "123456789",
+      "_direccion": "Direccion 4"
+    },
+    {
+      "_id": 5,
+      "_nombre": "Proveedor 5",
+      "_contacto": "prov5@gmail.com",
+      "_direccion": "Direccion 5"
+    }
+  ]
 }

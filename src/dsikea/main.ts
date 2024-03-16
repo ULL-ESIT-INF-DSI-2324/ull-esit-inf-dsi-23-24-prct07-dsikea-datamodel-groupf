@@ -104,7 +104,7 @@ async function realizarVenta() {
     });
 
     try {
-        stock.ventaMueble(idCliente, idMueble, cantidad);
+        stock.ventaMueble(idMueble, idCliente, cantidad);
         console.log('Venta realizada.');
     } catch (error) {
         console.error(error.message);
@@ -134,7 +134,7 @@ async function realizarCompra() {
     });
 
     try {
-        stock.compraMueble(idProveedor, idMueble, cantidad);
+        stock.compraMueble(idMueble, idProveedor, cantidad);
         console.log('Compra realizada.');
     } catch (error) {
         console.error(error.message);
@@ -192,7 +192,7 @@ async function devolucionCliente() {
     });
 
     try {
-        stock.devolucionCliente(idCliente, idMueble, cantidad);
+        stock.devolucionCliente(idMueble, idCliente, cantidad);
         console.log('Devolución realizada.');
     } catch (error) {
         console.error(error.message);
@@ -222,7 +222,7 @@ async function devolucionProveedor() {
     });
 
     try {
-        stock.devolucionProveedor(idProveedor, idMueble, cantidad);
+        stock.devolucionProveedor(idMueble, idProveedor, cantidad);
         console.log('Devolución realizada.');
     } catch (error) {
         console.error(error.message);
@@ -567,7 +567,7 @@ async function buscarMueblePorNombre() {
         choices: [
             'Ordenar alfabéticamente ascendente',
             'Ordenar alfabéticamente descendente',
-            'Ordenar por precio ascendete',
+            'Ordenar por precio ascendente',
             'Ordenar por precio descendente',
         ]
     });
@@ -612,7 +612,7 @@ async function buscarMueblePorTipo() {
         choices: [
             'Ordenar alfabéticamente ascendente',
             'Ordenar alfabéticamente descendente',
-            'Ordenar por precio ascendete',
+            'Ordenar por precio ascendente',
             'Ordenar por precio descendente',
         ]
     });
@@ -657,7 +657,7 @@ async function buscarMueblePorDescripcion() {
         choices: [
             'Ordenar alfabéticamente ascendente',
             'Ordenar alfabéticamente descendente',
-            'Ordenar por precio ascendete',
+            'Ordenar por precio ascendente',
             'Ordenar por precio descendente',
         ]
     });
