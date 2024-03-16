@@ -1,0 +1,14 @@
+{
+  "Muebles": [
+    {
+      "_id": 1,
+      "_tipo": "Silla",
+      "_nombre": "a",
+      "_descripcion": "a",
+      "_material": "a",
+      "_dimensiones": "a",
+      "_precio": null,
+      "_cantidad": 4
+    }
+  ]
+}

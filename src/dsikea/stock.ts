@@ -1,187 +1,141 @@
 import { Mueble } from "./mueble.js";
-import { Proveedor } from "./proveedor.js";
-import { Cliente } from "./cliente.js";
 
-import { ColeccionMuebles } from "./coleccion_muebles.js";
-import { ColeccionProveedores } from "./coleccion_proveedores.js";
-import { ColeccionClientes } from "./coleccion_clientes.js";
-import { Transaccion } from "./transaccion.js";
-
-import lowdb from "lowdb";
-import FileSync from "lowdb/adapters/FileSync.js";
+import { Database } from "./database.js";
 
 type InfoMueble = 'nombre' | 'descripcion' | 'material' | 'dimensiones' | 'precio';
 
 type InfoEntidad = 'nombre' | 'direccion' | 'contacto';
 
-type DBStock = {
-  Muebles: ColeccionMuebles;
-  Proveedores: ColeccionProveedores;
-  Clientes: ColeccionClientes;
-  Transacciones: Transaccion[];
-}
-
 export class Stock {
-	private _db: lowdb.LowdbSync<DBStock>;
-	private _stock: DBStock;
-	
-  private static StockInstance: Stock;
+	private _db: Database = Database.getInstance();
 
-	constructor() {
-		this._db = lowdb(new FileSync("stock.json"));
-    if (this._db.has("Muebles").value()) {
-      this._stock.Muebles = this._db.get("Muebles").value();
-    } else {
-      this._db.set("Muebles", []).write();
-      this._stock.Muebles = this._db.get("Muebles").value();
-    }
-
-    if (this._db.has("Proveedores").value()) {
-      this._stock.Proveedores = this._db.get("Proveedores").value();
-    } else {
-      this._db.set("Proveedores", []).write();
-      this._stock.Proveedores = this._db.get("Proveedores").value();
-    }
-    
-    if (this._db.has("Clientes").value()) {
-      this._stock.Clientes = this._db.get("Clientes").value();
-    } else {
-      this._db.set("Clientes", []).write();
-      this._stock.Clientes = this._db.get("Clientes").value();
-    }
-    
-    if (this._db.has("Transacciones").value()) {
-      this._stock.Transacciones = this._db.get("Transacciones").value();
-    } else {
-      this._db.set("Transacciones", []).write();
-      this._stock.Transacciones = this._db.get("Transacciones").value();
-    }
-  }
-
-  public static getInstance(): Stock {
-    if (!Stock.StockInstance) {
-      Stock.StockInstance = new Stock();
-    }
-    return Stock.StockInstance;
-  }
+	constructor() {}
 
   get db() {
-    return Stock.StockInstance._db;
+    return this._db;
   }
 
-  get stock() {
-    return Stock.StockInstance._stock;
+  addNewMueble(mueble: Mueble) {
+    this._db.addNewMueble(mueble);
   }
-
-  saveDB() {
-    Stock.StockInstance._db.set("Muebles", Stock.StockInstance._stock.Muebles).write();
-    Stock.StockInstance._db.set("Proveedores", Stock.StockInstance._stock.Proveedores).write();
-    Stock.StockInstance._db.set("Clientes", Stock.StockInstance._stock.Clientes).write();
-    Stock.StockInstance._db.set("Transacciones", Stock.StockInstance._stock.Transacciones).write();
-  }
-
-  addNewMueble(mueble: Mueble, cantidad? :number) {
-    Stock.StockInstance._stock.Muebles.addMueble(mueble, cantidad);
-    this.saveDB()
-  }
-
+  
   addMuebleExistente(id: number, cantidad: number) {
-    Stock.StockInstance._stock.Muebles.addMuebleById(id, cantidad);
-    this.saveDB()
+    this._db.getDBMuebles().get("Muebles").value().forEach(mueble => {
+      if (mueble._id === id) {
+        this._db.getDBMuebles().get("Muebles").find({_id: id}).assign({_cantidad: mueble._cantidad + cantidad}).write();
+      } else {
+        throw new Error('No se ha encontrado el mueble con el id proporcionado');
+      }
+    });
   }
-
-  removeMueble(id: number) {
-    Stock.StockInstance._stock.Muebles.removeMuebleById(id);
-    this.saveDB()
+/*
+  removeMueble(id: number, cantidad: number) {
+    this.muebles.forEach((value, mueble) => {
+      if (mueble.id === id) {
+        if (value - cantidad <= 0) {
+          this.muebles.delete(mueble);
+        }
+        this.muebles.set(mueble, value - cantidad);
+      }
+    });
+    this._db.saveDB(this);
   }
 
 	modifyMueble(id: number, parametro :InfoMueble, valor :string | number) {
-    const indexMueble = Stock.StockInstance._stock.Muebles.muebles.findIndex(mueble => mueble[0].id === id);
-    switch (parametro) {
-      case 'nombre':
-        Stock.StockInstance._stock.Muebles.muebles[indexMueble][0].nombre = valor as string;
-        break;
-      case 'descripcion':
-        Stock.StockInstance._stock.Muebles.muebles[indexMueble][0].descripcion = valor as string;
-        break;
-      case 'material':
-        Stock.StockInstance._stock.Muebles.muebles[indexMueble][0].material = valor as string;
-        break;
-      case 'dimensiones':
-        Stock.StockInstance._stock.Muebles.muebles[indexMueble][0].dimensiones = valor as string;
-        break;
-      case 'precio':
-        Stock.StockInstance._stock.Muebles.muebles[indexMueble][0].precio = valor as number;
-        break;
-      default:
-        break;
-    }
-    this.saveDB()
+    this.muebles.forEach((value, mueble) => {
+      if (mueble.id === id) {
+        switch (parametro) {
+          case 'nombre':
+            mueble.nombre = valor as string;
+            break;
+          case 'descripcion':
+            mueble.descripcion = valor as string;
+            break;
+          case 'material':
+            mueble.material = valor as string;
+            break;
+          case 'dimensiones':
+            mueble.dimensiones = valor as string;
+            break;
+          case 'precio':
+            mueble.precio = valor as number;
+            break;
+          default:
+            break;
+        }
+      }
+    });
+    this._db.saveDB(this);
   }
 
   addProveedor(proveedor: Proveedor) {
-    Stock.StockInstance._stock.Proveedores.addProveedor(proveedor);
-    this.saveDB()
+    this.proveedores.push(proveedor);
+    this._db.saveDB(this);
   }
 
   removeProveedor(id: number) {
-    Stock.StockInstance._stock.Proveedores.removeProveedorById(id);
-    this.saveDB()
+    this.proveedores.splice(this.proveedores.findIndex(proveedor => proveedor.id === id), 1);
+    this._db.saveDB(this);
   }
 
   modifyProveedor(id: number, parametro :InfoEntidad, valor :string) {
-    const indexProveedor = Stock.StockInstance._stock.Proveedores.proveedores.findIndex(proveedor => proveedor.id === id);
+    const indexProveedor = this.proveedores.findIndex(proveedor => proveedor.id === id);
     switch (parametro) {
       case 'nombre':
-        Stock.StockInstance._stock.Proveedores.proveedores[indexProveedor].nombre = valor;
+        this.proveedores[indexProveedor].nombre = valor;
         break;
       case 'direccion':
-        Stock.StockInstance._stock.Proveedores.proveedores[indexProveedor].direccion = valor;
+        this.proveedores[indexProveedor].direccion = valor;
         break;
       case 'contacto':
-        Stock.StockInstance._stock.Proveedores.proveedores[indexProveedor].contacto = valor;
+        this.proveedores[indexProveedor].contacto = valor;
         break;
       default:
         break;
     }
-    this.saveDB()
+    this._db.saveDB(this);
   }
 
   addCliente(cliente: Cliente) {
-    Stock.StockInstance._stock.Clientes.addCliente(cliente);
-    this.saveDB()
+    this.clientes.push(cliente);
+    this._db.saveDB(this);
   }
 
   removeCliente(id: number) {
-    Stock.StockInstance._stock.Clientes.removeClienteById(id);
-    this.saveDB()
+    this.clientes.splice(this.clientes.findIndex(cliente => cliente.id === id), 1);
+    this._db.saveDB(this);
   }
 
   modifyCliente(id: number, parametro :InfoEntidad, valor :string) {
-    const indexCliente = Stock.StockInstance._stock.Clientes.clientes.findIndex(cliente => cliente.id === id);
+    const indexCliente = this.clientes.findIndex(cliente => cliente.id === id);
     switch (parametro) {
       case 'nombre':
-        Stock.StockInstance._stock.Clientes.clientes[indexCliente].nombre = valor;
+        this.clientes[indexCliente].nombre = valor;
         break;
       case 'direccion':
-        Stock.StockInstance._stock.Clientes.clientes[indexCliente].direccion = valor;
+        this.clientes[indexCliente].direccion = valor;
         break;
       case 'contacto':
-        Stock.StockInstance._stock.Clientes.clientes[indexCliente].contacto = valor;
+        this.clientes[indexCliente].contacto = valor;
         break;
       default:
         break;
     }
-    this.saveDB()
+    this._db.saveDB(this);
   }
 
   ventaMueble(idMueble: number, idCliente: number, cantidad: number) {
-    const mueble = Stock.StockInstance._stock.Muebles.muebles.find(mueble => mueble[0].id === idMueble);
-    const cliente = Stock.StockInstance._stock.Clientes.clientes.find(cliente => cliente.id === idCliente);
-    if (!mueble) throw new Error('No se ha encontrado el mueble con el id proporcionado');
+    let mueble_existe : boolean = false;
+    this.muebles.forEach((value, mueble) => {
+      if (mueble.id === idMueble) {
+        mueble_existe = true;
+      }
+    });
+    if (!mueble_existe) throw new Error('No se ha encontrado el mueble con el id proporcionado');
+    const cliente = this.clientes.find(cliente => cliente.id === idCliente);
     if (!cliente) throw new Error('No se ha encontrado el cliente con el id proporcionado');
     /// Existe el mueble y el cliente
-    Stock.StockInstance._stock.Muebles.removeMuebleById(idMueble, cantidad);
+    this.removeMueble(idMueble, cantidad);
     const transaccion: Transaccion = {
       date: new Date(),
       id_mueble: idMueble,
@@ -189,7 +143,74 @@ export class Stock {
       type: 'Venta',
       amount: cantidad
     };
-    Stock.StockInstance._stock.Transacciones.push(transaccion);
-    this.saveDB()
+    this.transacciones.push(transaccion);
+    this._db.saveDB(this);
   }
+
+  compraProveedor(idMueble: number, idProveedor: number, cantidad: number) {
+    let mueble_existe : boolean = false;
+    this.muebles.forEach((value, mueble) => {
+      if (mueble.id === idMueble) {
+        mueble_existe = true;
+      }
+    });
+    if (!mueble_existe) throw new Error('No se ha encontrado el mueble con el id proporcionado');
+    const proveedor = this.proveedores.find(proveedor => proveedor.id === idProveedor);
+    if (!proveedor) throw new Error('No se ha encontrado el proveedor con el id proporcionado');
+    /// Existe el mueble y el proveedor
+    this.addMuebleExistente(idMueble, cantidad);
+    const transaccion: Transaccion = {
+      date: new Date(),
+      id_mueble: idMueble,
+      id_implicado: idProveedor,
+      type: 'Compra',
+      amount: cantidad
+    };
+    this.transacciones.push(transaccion);
+    this._db.saveDB(this);
+  }
+
+  devolucionCliente(idMueble: number, idCliente: number, cantidad: number) {
+    const transaccion_previa = this.transacciones.find(transaccion => 
+    transaccion.id_mueble === idMueble && transaccion.id_implicado === idCliente && transaccion.type === 'Venta');
+    if (!transaccion_previa) throw new Error('No se ha encontrado la transacción previa con el id proporcionado, por lo que no se puede realizar la devolución');
+    const cliente = this.clientes.find(cliente => cliente.id === idCliente);
+    if (!cliente) throw new Error('No se ha encontrado el cliente con el id proporcionado');
+    /// Existe el mueble y el cliente
+    this.addMuebleExistente(idMueble, cantidad);
+    const transaccion: Transaccion = {
+      date: new Date(),
+      id_mueble: idMueble,
+      id_implicado: idCliente,
+      type: 'Devolución de Cliente',
+      amount: cantidad
+    };
+    this.transacciones.push(transaccion);
+    this._db.saveDB(this);
+  }
+
+  devolucionProveedor(idMueble: number, idProveedor: number, cantidad: number) {
+    const transaccion_previa = this.transacciones.find(transaccion =>
+    transaccion.id_mueble === idMueble && transaccion.id_implicado === idProveedor && transaccion.type === 'Compra')
+    if (!transaccion_previa) throw new Error('No se ha encontrado la transacción previa con el id proporcionado, por lo que no se puede realizar la devolución');
+    const proveedor = this.proveedores.find(proveedor => proveedor.id === idProveedor);
+    if (!proveedor) throw new Error('No se ha encontrado el proveedor con el id proporcionado');
+    /// Existe el mueble y el proveedor
+    this.removeMueble(idMueble, cantidad);
+    const transaccion: Transaccion = {
+      date: new Date(),
+      id_mueble: idMueble,
+      id_implicado: idProveedor,
+      type: 'Devolución a Proveedor',
+      amount: cantidad
+    };
+    this.transacciones.push(transaccion);
+    this._db.saveDB(this);
+  }
+
+  obtenerNuevoIDMueble() {
+    if (this.muebles.size === 0) return 0;
+    const lastId = Array.from(this.muebles.keys()).reduce((prev, current) => (prev.id > current.id) ? prev : current).id;
+    return lastId + 1;
+  }*/
 }

@@ -88,10 +88,12 @@ describe('Test de la clase ColecciónMuebles', () => {
 
 	it('Se crea una colección de muebles', () => {
 		expect(coleccion).to.be.an.instanceof(ColeccionMuebles);
+		expect(coleccion_vacía).to.be.an.instanceof(ColeccionMuebles);
 	});
 
 	it('Se obtiene el número de muebles de la colección', () => {
 		expect(coleccion.muebles.length).to.equal(20);
+		expect(coleccion_vacía.muebles.length).to.equal(0);
 	});
 	
 	it('Se obtienen los muebles de la colección', () => {
@@ -100,6 +102,7 @@ describe('Test de la clase ColecciónMuebles', () => {
 																				 [mueble11, 6], [mueble12, 2], [mueble13, 3], [mueble14, 2], [mueble15, 2], 
 																				 [mueble16, 2], [mueble17, 4], [mueble18, 8], [mueble19, 12], [mueble20, 4]];
 		expect(coleccion.muebles).to.eql(solucion);
+		expect(coleccion_vacía.muebles).to.be.empty;
 	});
 
 	it('Se añade un mueble a la colección', () => {

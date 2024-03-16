@@ -36,4 +36,28 @@ describe('Tests de la clase Armario', () => {
 		expect(armario2.precio).to.equal(400);
 		expect(armario2.puertas).to.equal(2);
 	});
+
+	it('Se actualiza un armario correctamente', () => {
+		armario1.nombre = 'Rústico';
+		armario1.descripcion = 'Un armario de estilo rústico con acabado en pino';
+		armario1.material = 'Madera';
+		armario1.dimensiones = '200 cm de ancho x 220 cm de alto x 60 cm de profundidad';
+		armario1.precio = 1200;
+		expect(armario1.nombre).to.equal('Rústico');
+		expect(armario1.descripcion).to.equal('Un armario de estilo rústico con acabado en pino');
+		expect(armario1.material).to.equal('Madera');
+		expect(armario1.dimensiones).to.equal('200 cm de ancho x 220 cm de alto x 60 cm de profundidad');
+		expect(armario1.precio).to.equal(1200);
+
+		armario2.nombre = 'Clásico';
+		armario2.descripcion = 'Un armario de estilo clásico con detalles de molduras y acabado en nogal';
+		armario2.material = 'Madera';
+		armario2.dimensiones = '180 cm de ancho x 220 cm de alto x 60 cm de profundidad';
+		armario2.precio = 1000;
+		expect(armario2.nombre).to.equal('Clásico');
+		expect(armario2.descripcion).to.equal('Un armario de estilo clásico con detalles de molduras y acabado en nogal');
+		expect(armario2.material).to.equal('Madera');
+		expect(armario2.dimensiones).to.equal('180 cm de ancho x 220 cm de alto x 60 cm de profundidad');
+		expect(armario2.precio).to.equal(1000);
+	});
 });

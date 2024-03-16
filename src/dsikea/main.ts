@@ -1,12 +1,14 @@
-/*import inquirer from 'inquirer';
-import { ColeccionMuebles } from './coleccion_muebles.js';
-import { Silla } from './silla.js';
-import { Comoda } from './comoda.js';
+import inquirer from 'inquirer';
+import { Stock } from './stock.js';
+import { Database } from './database.js';
+import { Mueble } from './mueble.js';
 
 // Instanciar la clase Stock para gestionar la información del sistema
-const mueble_1 :Silla = new Silla(5, "Silla1", "Una bonita silla",'Madera', "5x5x5", 30, "Marrón");
-const mueble_2 :Comoda = new Comoda(6, "Silla1", "Una bonita comoda",'Madera', "5x5x5", 30, 5);
-const muebles = new ColeccionMuebles([mueble_1, mueble_2]);
+// const mueble_1 :Silla = new Silla(5, "Silla1", "Una bonita silla",'Madera', "5x5x5", 30, "Marrón");
+// const mueble_2 :Comoda = new Comoda(6, "Silla1", "Una bonita comoda",'Madera', "5x5x5", 30, 5);
+// const muebles = new ColeccionMuebles([mueble_1, mueble_2]);
+
+const stock = new Stock();
 
 // Función principal para interactuar con la aplicación
 async function main() {
@@ -26,14 +28,17 @@ async function main() {
     });
 
     switch (option) {
+        case 'Realizar transacción':
+            //await realizarTransaccion();
+            break;
         case 'Gestionar muebles':
             await gestionarMuebles();
             break;
         case 'Gestionar proveedores':
-            await gestionarProveedores();
+            //await gestionarProveedores();
             break;
         case 'Gestionar clientes':
-            await gestionarClientes();
+            //await gestionarClientes();
             break;
         case 'Salir':
             console.log('Gracias por usar el sistema. ¡Hasta luego!');
@@ -61,7 +66,7 @@ async function gestionarMuebles() {
 
     switch (option) {
         case 'Añadir mueble':
-            // Implementar lógica para añadir un mueble
+            await anadirMueble();
             break;
         case 'Borrar mueble':
             // Implementar lógica para borrar un mueble
@@ -70,7 +75,7 @@ async function gestionarMuebles() {
             // Implementar lógica para modificar un mueble
             break;
         case 'Buscar mueble':
-            await buscarMueble();
+            //await buscarMueble();
             break;
         case 'Volver':
             // Volver al menú principal
@@ -79,6 +84,109 @@ async function gestionarMuebles() {
     }
 }
 
+async function anadirMueble() {
+    console.log('\nAñadir mueble:');
+
+    // Mostrar opciones para añadir un mueble
+    const { option } = await inquirer.prompt({
+        type: 'list',
+        name: 'option',
+        message: 'Selecciona una opción:',
+        choices: [
+            'Añadir mueble existente',
+            'Añadir mueble nuevo',
+            'Volver'
+        ]
+    });
+
+    switch (option) {
+        case 'Añadir mueble existente':
+            await anadirMuebleExistente();
+            break;
+        case 'Añadir mueble nuevo':
+            await anadirMuebleNuevo();
+            break;
+        case 'Volver':
+            // Volver al menú de gestión de muebles
+            await gestionarMuebles();
+            break;
+    }
+}
+
+async function anadirMuebleExistente() {
+    console.log('\nAñadir mueble existente por ID:');
+    const { idMueble } = await inquirer.prompt({
+        type: 'number',
+        name: 'idMueble',
+        message: 'Ingrese el ID del mueble:'
+    });
+    const { cantidad } = await inquirer.prompt({
+        type: 'number',
+        name: 'cantidad',
+        message: 'Ingrese la cantidad de muebles a añadir:'
+    });
+    stock.addMuebleExistente(idMueble, cantidad);
+    console.log('Mueble añadido al stock.');
+}
+
+async function anadirMuebleNuevo() {
+    console.log('\nAñadir mueble:');
+
+    const datosMueble = await inquirer.prompt([
+        {
+            type: 'input',
+            name: 'tipo',
+            message: 'Ingrese el Tipo de mueble:'
+        },
+        {
+            type: 'input',
+            name: 'nombre',
+            message: 'Ingrese el nombre de mueble:'
+        },
+        {
+            type: 'input',
+            name: 'descripcion',
+            message: 'Ingrese la descripción:'
+        },
+        {
+            type: 'input',
+            name: 'material',
+            message: 'Ingrese el material:'
+        },
+        {
+            type: 'input',
+            name: 'dimensiones',
+            message: 'Ingrese las dimensiones:'
+        },
+        {
+            type: 'number',
+            name: 'precio',
+            message: 'Ingrese el precio'
+        },
+        {
+            type: 'number',
+            name: 'cantidad',
+            message: 'Ingrese la cantidad que quiere añadir de este mueble:'
+        }
+    ]);
+
+    const mueble = new Mueble(
+        1,
+        datosMueble.tipo,
+        datosMueble.nombre,
+        datosMueble.descripcion,
+        datosMueble.material,
+        datosMueble.dimensiones,
+        datosMueble.precio,
+        datosMueble.cantidad
+    );
+
+    stock.addNewMueble(mueble);
+
+    console.log(`${mueble.nombre} agregada al stock.`);
+}
+
+/*
 async function buscarMueble() {
     console.log('\nBuscar mueble:');
 
@@ -97,11 +205,11 @@ async function buscarMueble() {
 
     switch (option) {
         case 'Buscar por nombre':
-            console.table(muebles.searchByNombre('Silla1'));
+            console.table(stock.muebles.searchByNombre('Silla1'));
             await ordenar();
             break;
         case 'Buscar por tipo':
-            // Implementar lógica para buscar un mueble por tipo
+            console.table(stock.muebles.searchByTipo('Silla'));
             break;
         case 'Buscar por descripción':
             // Implementar lógica para buscar un mueble por descripción
@@ -112,6 +220,7 @@ async function buscarMueble() {
             break;
     }
 }
+
 
 async function ordenar() {
     console.log('\nOrdenar muebles:');
@@ -132,18 +241,18 @@ async function ordenar() {
 
     switch (option) {
         case 'Ordenar por precio ascendete':
-            console.table(muebles.orderByPrecio(false));
+            console.table(stock.muebles.orderByPrecio(false));
             break;
         case 'Ordenar por precio descendente':
-            console.table(muebles.orderByPrecio());    
+            console.table(stock.muebles.orderByPrecio());    
             break;
         case 'Ordenar alfabéticamente ascendente':
             // Implementar lógica para ordenar los muebles alfabéticamente
-            console.table(muebles.orderByAlfabeticamente(false));
+            console.table(stock.muebles.orderByAlfabeticamente(false));
             break;
         case 'Ordenar alfabéticamente descendente':
             // Implementar lógica para ordenar los muebles alfabéticamente
-            console.table(muebles.orderByAlfabeticamente());
+            console.table(stock.muebles.orderByAlfabeticamente());
             break;
         case 'Volver':
             // Volver al menú de búsqueda de muebles
@@ -226,8 +335,7 @@ async function gestionarClientes() {
             await main();
             break;
     }
-}
+}*/
 
 // Iniciar la aplicación
 main();
-*/
