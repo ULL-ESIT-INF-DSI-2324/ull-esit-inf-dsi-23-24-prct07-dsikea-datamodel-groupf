@@ -1,8 +1,8 @@
 export class Cliente {
-	protected _id: number;
-	protected _nombre: string;
-	protected _contacto: string;
-	protected _direccion: string;
+	_id: number;
+	_nombre: string;
+	_contacto: string;
+	_direccion: string;
 
 	constructor(id: number, nombre: string, contacto: string, direccion: string) {
 		this._id = id;

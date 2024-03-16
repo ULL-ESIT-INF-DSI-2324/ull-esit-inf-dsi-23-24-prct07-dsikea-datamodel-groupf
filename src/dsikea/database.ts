@@ -1,8 +1,6 @@
 import low from 'lowdb';
 import FileSync from 'lowdb/adapters/FileSync.js';
 
-import { Stock } from './stock.js';
-
 import { Transaccion } from './transaccion.js';
 import { Cliente } from './cliente.js';
 import { Proveedor } from './proveedor.js';
