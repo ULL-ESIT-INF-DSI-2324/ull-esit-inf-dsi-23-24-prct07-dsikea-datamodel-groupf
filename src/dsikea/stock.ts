@@ -46,7 +46,7 @@ export class Stock {
     const existe_id = mueblesArray.find({ _id: id }).value();
     if (existe_id) {
       if (existe_id._cantidad === cantidad) {
-        mueblesArray.remove({ _id: id }).write();
+        this._db.removeMueble(id);
         console.log(`Mueble con ID ${id} eliminado correctamente.`);
         return;
       } else if (existe_id._cantidad < cantidad){
@@ -84,8 +84,6 @@ export class Stock {
           break;
         case 'cantidad':
           this._db.getDBMuebles().get("Muebles").find({_id: id}).assign({_cantidad: valor}).write();
-          break;
-        default:
           break;
       }
     }
@@ -185,8 +183,6 @@ export class Stock {
           case 'contacto':
             this._db.getDBProveedores().get("Proveedores").find({_id: id}).assign({_contacto: valor}).write();
             break;
-          default:
-            break;
         }
       }
     });
@@ -250,8 +246,6 @@ export class Stock {
             break;
           case 'contacto':
             this._db.getDBClientes().get("Clientes").find({_id: id}).assign({_contacto: valor}).write();
-            break;
-          default:
             break;
         }
       }
@@ -383,8 +377,6 @@ export class Stock {
         return this._db.getDBProveedores().get("Proveedores").value().length + 1;
       case 'Transacciones':
         return this._db.getDBTransaccion().get("Transacciones").value().length + 1;
-      default:
-        throw new Error('No se ha encontrado el parámetro proporcionado');
     }
   }
 

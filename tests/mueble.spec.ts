@@ -299,6 +299,7 @@ describe('Tests de la clase Mueble', () => {
 	});
 
 	it('Se actualiza un armario correctamente', () => {
+		armario1.tipo = 'Comoda';
 		armario1.nombre = 'Clásico Elegante 2';
 		armario1.descripcion = 'Un armario de estilo clásico con detalles de molduras y acabado en nogal. Versión 2.';
 		armario1.material = 'Madera de pino';
@@ -306,6 +307,7 @@ describe('Tests de la clase Mueble', () => {
 		armario1.precio = 1200;
 		armario1.cantidad = 2;
 
+		expect(armario1.tipo).to.equal('Comoda');
 		expect(armario1.nombre).to.equal('Clásico Elegante 2');
 		expect(armario1.descripcion).to.equal('Un armario de estilo clásico con detalles de molduras y acabado en nogal. Versión 2.');
 		expect(armario1.material).to.equal('Madera de pino');
@@ -315,6 +317,7 @@ describe('Tests de la clase Mueble', () => {
 	});
 	
 	it('Se actualiza una cómoda correctamente', () => {
+		comoda1.tipo = 'Armario';
 		comoda1.nombre = 'Moderna Minimalista 2';
 		comoda1.descripcion = 'Una cómoda elegante y minimalista con líneas limpias y acabado brillante. Versión 2.';
 		comoda1.material = 'Madera de roble';
@@ -322,6 +325,7 @@ describe('Tests de la clase Mueble', () => {
 		comoda1.precio = 350;
 		comoda1.cantidad = 5;
 
+		expect(comoda1.tipo).to.equal('Armario');
 		expect(comoda1.nombre).to.equal('Moderna Minimalista 2');
 		expect(comoda1.descripcion).to.equal('Una cómoda elegante y minimalista con líneas limpias y acabado brillante. Versión 2.');
 		expect(comoda1.material).to.equal('Madera de roble');
@@ -331,6 +335,7 @@ describe('Tests de la clase Mueble', () => {
 	});
 	
 	it('Se actualiza una mesa correctamente', () => {
+		mesa1.tipo = 'Comoda';
 		mesa1.nombre = 'Elegancia Clásica 2';
 		mesa1.descripcion = 'Una mesa de comedor con un diseño clásico y elegante, perfecta para reuniones formales. Versión 2.';
 		mesa1.material = 'Madera de pino';
@@ -338,6 +343,7 @@ describe('Tests de la clase Mueble', () => {
 		mesa1.precio = 850;
 		mesa1.cantidad = 7;
 
+		expect(mesa1.tipo).to.equal('Comoda');
 		expect(mesa1.nombre).to.equal('Elegancia Clásica 2');
 		expect(mesa1.descripcion).to.equal('Una mesa de comedor con un diseño clásico y elegante, perfecta para reuniones formales. Versión 2.');
 		expect(mesa1.material).to.equal('Madera de pino');
@@ -347,6 +353,7 @@ describe('Tests de la clase Mueble', () => {
 	});
 	
 	it('Se actualiza una silla correctamente', () => {
+		silla1.tipo = 'Mesa';
 		silla1.nombre = 'Ergonómica Comfort 2';
 		silla1.descripcion = 'Una silla diseñada para proporcionar comodidad durante largas horas de trabajo o estudio, con soporte lumbar ajustable y acolchado ergonómico. Versión 2.';
 		silla1.material = 'Malla de alta calidad';
@@ -354,6 +361,7 @@ describe('Tests de la clase Mueble', () => {
 		silla1.precio = 200;
 		silla1.cantidad = 3;
 
+		expect(silla1.tipo).to.equal('Mesa');
 		expect(silla1.nombre).to.equal('Ergonómica Comfort 2');
 		expect(silla1.descripcion).to.equal('Una silla diseñada para proporcionar comodidad durante largas horas de trabajo o estudio, con soporte lumbar ajustable y acolchado ergonómico. Versión 2.');
 		expect(silla1.material).to.equal('Malla de alta calidad');

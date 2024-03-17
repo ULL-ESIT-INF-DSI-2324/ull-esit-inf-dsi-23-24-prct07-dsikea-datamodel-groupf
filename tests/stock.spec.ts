@@ -47,14 +47,29 @@ describe('Tests de la clase Stock', () => {
 	});
 
 	it('Se modifica un mueble correctamente del stock', () => {
-		const id = 21;
+		const id = 22;
+		const tipo = 'Comoda'
 		const nombre = 'Armario Test 2';
 		const descripcion = 'Un armario test. Versión 2.';
+		const material = 'Madera V2';
+		const dimensiones = 'Dimensiones Test V2';
+		const precio = 250;
+		const cantidad = 4;
 		stock.modifyMueble(id, 'nombre', nombre);
+		stock.modifyMueble(id, 'tipo', tipo);
 		stock.modifyMueble(id, 'descripcion', descripcion);
+		stock.modifyMueble(id, 'material', material);
+		stock.modifyMueble(id, 'dimensiones', dimensiones);
+		stock.modifyMueble(id, 'precio', precio);
+		stock.modifyMueble(id, 'cantidad', cantidad);
 
 		expect(stock.db.getDBMuebles().get('Muebles').find({ _id: id }).value()._nombre).to.be.equal(nombre);
+		expect(stock.db.getDBMuebles().get('Muebles').find({ _id: id }).value()._tipo).to.be.equal(tipo);
 		expect(stock.db.getDBMuebles().get('Muebles').find({ _id: id }).value()._descripcion).to.be.equal(descripcion);
+		expect(stock.db.getDBMuebles().get('Muebles').find({ _id: id }).value()._material).to.be.equal(material);
+		expect(stock.db.getDBMuebles().get('Muebles').find({ _id: id }).value()._dimensiones).to.be.equal(dimensiones);
+		expect(stock.db.getDBMuebles().get('Muebles').find({ _id: id }).value()._precio).to.be.equal(precio);
+		expect(stock.db.getDBMuebles().get('Muebles').find({ _id: id }).value()._cantidad).to.be.equal(cantidad);
 
 		// Error
 		expect(() => stock.modifyMueble(0, 'nombre', nombre)).to.throw(Error, 'No se ha encontrado el mueble con el id proporcionado');
@@ -215,6 +230,9 @@ describe('Tests de la clase Stock', () => {
 		expect(mueblesEncontrados4).to.have.lengthOf(2);
 		expect(mueblesEncontrados4[0]._id).to.be.equal(12);
 		expect(mueblesEncontrados4[1]._id).to.be.equal(18);
+
+		// Error
+		expect(() => stock.buscarMuebleByNombre('Mueble Inexistente', alfabeticamente, ascendente)).to.throw(Error, 'No se ha encontrado el mueble con el nombre proporcionado');
 	});
 
 	it('Se busca un mueble por tipo correctamente', () => {
@@ -254,6 +272,9 @@ describe('Tests de la clase Stock', () => {
 		expect(mueblesEncontrados4[2]._id).to.be.equal(12);
 		expect(mueblesEncontrados4[3]._id).to.be.equal(14);
 		expect(mueblesEncontrados4[4]._id).to.be.equal(13);
+
+		// Error
+		expect(() => stock.buscarMuebleByTipo('Tipo Inexistente', alfabeticamente, ascendente)).to.throw(Error, 'No se ha encontrado el mueble con el tipo proporcionado');
 	});
 
 	it('Se busca un mueble por palabras clave en su descripción correctamente', () => {
@@ -443,5 +464,29 @@ describe('Tests de la clase Stock', () => {
 		const idProveedor = 3;
 		const informeComprasProveedor = stock.informeComprasAProveedorConcreto(idProveedor);
 		expect(informeComprasProveedor).to.have.lengthOf(1);
+	});
+
+	it('Obtiene un nuevo ID para Muebles correctamente', () => {
+		const nuevoID = stock.obtenerNuevoID('Muebles');
+		expect(nuevoID).to.be.a('number');
+		expect(nuevoID).to.be.equal(21);
+	});
+
+	it('Obtiene un nuevo ID para Clientes correctamente', () => {
+		const nuevoID = stock.obtenerNuevoID('Clientes');
+		expect(nuevoID).to.be.a('number');
+		expect(nuevoID).to.be.equal(6);
+	});
+
+	it('Obtiene un nuevo ID para Proveedores correctamente', () => {
+		const nuevoID = stock.obtenerNuevoID('Proveedores');
+		expect(nuevoID).to.be.a('number');
+		expect(nuevoID).to.be.equal(6);
+	});
+
+	it('Obtiene un nuevo ID para Transacciones correctamente', () => {
+		const nuevoID = stock.obtenerNuevoID('Transacciones');
+		expect(nuevoID).to.be.a('number');
+		expect(nuevoID).to.be.equal(9);
 	});
 });
