@@ -1,3 +1,10 @@
+/**
+ * Clase que representa un cliente.
+ * @param _id Identificador del cliente.
+ * @param _nombre Nombre del cliente.
+ * @param _contacto Información de contacto del cliente.
+ * @param _direccion Dirección del cliente.
+ */
 export class Cliente {
 	_id: number;
 	_nombre: string;

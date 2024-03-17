@@ -1,3 +1,14 @@
+/**
+ * Clase que representa un mueble.
+ * @param _id Identificador del mueble.
+ * @param _tipo Tipo de mueble (Silla, armario, cómoda...).
+ * @param _nombre Nombre del mueble.
+ * @param _descripcion Descripción del mueble.
+ * @param _material Material del mueble.
+ * @param _dimensiones Dimensiones del mueble.
+ * @param _precio Precio del mueble.
+ * @param _cantidad Cantidad disponible del mueble.
+ */
 export class Mueble {
   _id: number;
   _tipo: string;

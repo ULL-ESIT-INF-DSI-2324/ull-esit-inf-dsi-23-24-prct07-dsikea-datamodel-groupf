@@ -1,3 +1,10 @@
+/**
+ * Clase que representa un proveedor.
+ * @param _id Identificador del proveedor.
+ * @param _nombre Nombre del proveedor.
+ * @param _contacto Información de contacto del proveedor.
+ * @param _direccion Dirección del proveedor.
+ */
 export class Proveedor {
 	_id: number;
 	_nombre: string;

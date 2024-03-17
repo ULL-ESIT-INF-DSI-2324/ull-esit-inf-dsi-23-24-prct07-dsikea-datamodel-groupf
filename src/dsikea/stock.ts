@@ -9,6 +9,10 @@ type InfoMueble = 'nombre' | 'tipo' | 'descripcion' | 'material' | 'dimensiones'
 
 type InfoEntidad = 'nombre' | 'direccion' | 'contacto';
 
+/**
+ * Clase que representa el stock de muebles y gestiona las operaciones relacionadas con ellos, 
+ * así como con proveedores, clientes y transacciones.
+ */
 export class Stock {
 	private _db: Database = Database.getInstance();
 
@@ -16,18 +20,24 @@ export class Stock {
 
   /// <---------------------------------------------- Muebles ---------------------------------------------->
 
-
+  /**
+   * Añade un nuevo mueble al stock.
+   * @param mueble Objeto de tipo Mueble que se va a añadir al stock.
+   */
   addNewMueble(mueble: Mueble) {
     this._db.addNewMueble(mueble);
   }
   
-  addMuebleExistente(id: number, cantidad: number) {
+  /**
+   * Añade la cantidad especificada de un mueble existente en el stock.
+   * @param id Identificador único del mueble.
+   * @param cantidad Cantidad del mueble que se va a añadir.
+   */
+  addMuebleExistente(id: number, cantidad: number) :void {
     const dbMuebles = this._db.getDBMuebles();
     const mueblesArray = dbMuebles.get("Muebles");
-    // Find the furniture item by id
     const existe_id = mueblesArray.find({ _id: id }).value();
     if (existe_id) {
-        // If the item exists, update its quantity
         mueblesArray.find({ _id: id }).assign({ _cantidad: existe_id._cantidad + cantidad }).write();
         console.log(`Cantidad de mueble con ID ${id} actualizada correctamente.`);
     } else {
@@ -35,12 +45,14 @@ export class Stock {
     }
   }
 
-  
-  
-  removeMueble(id: number, cantidad: number) {
+  /**
+   * Elimina la cantidad especificada de un mueble del stock.
+   * @param id Identificador único del mueble.
+   * @param cantidad Cantidad del mueble que se va a eliminar.
+   */
+  removeMueble(id: number, cantidad: number) :void {
     const dbMuebles = this._db.getDBMuebles();
     const mueblesArray = dbMuebles.get("Muebles");
-    // Find the furniture item by id
     const existe_id = mueblesArray.find({ _id: id }).value();
     if (existe_id) {
       if (existe_id._cantidad === cantidad) {
@@ -57,7 +69,13 @@ export class Stock {
     }
   }
 
-	modifyMueble(id: number, parametro :InfoMueble, valor :string | number) {
+  /**
+   * Modifica los atributos de un mueble específico en el stock.
+   * @param id Identificador único del mueble.
+   * @param parametro Parámetro que se va a modificar ('nombre', 'tipo', 'descripcion', 'material', 'dimensiones', 'precio' o 'cantidad').
+   * @param valor Nuevo valor del parámetro especificado.
+   */
+	modifyMueble(id: number, parametro :InfoMueble, valor :string | number) :void {
     if (this._db.getDBMuebles().get("Muebles").find({_id: id})) {
       switch (parametro) {
         case 'nombre':
@@ -89,7 +107,14 @@ export class Stock {
     }
   }
 
-  buscarMuebleByNombre(nombre: string, alfabeticamente: boolean, ascendente: boolean) {
+  /**
+   * Busca muebles en el stock por su nombre.
+   * @param nombre Nombre del mueble a buscar.
+   * @param alfabeticamente Indica si se deben ordenar los resultados alfabéticamente.
+   * @param ascendente Indica si se deben ordenar los resultados en orden ascendente.
+   * @returns Array de muebles encontrados.
+   */
+  buscarMuebleByNombre(nombre: string, alfabeticamente: boolean, ascendente: boolean) :Mueble[] {
     const dbMuebles = this._db.getDBMuebles();
     const mueblesArray = dbMuebles.get("Muebles");
     const mueble = mueblesArray.find({ _nombre: nombre }).value();
@@ -113,7 +138,14 @@ export class Stock {
     }
   }
 
-  buscarMuebleByTipo(tipo: string, alfabeticamente: boolean, ascendente: boolean) {
+  /**
+   * Busca muebles en el stock por su tipo.
+   * @param tipo Tipo del mueble a buscar.
+   * @param alfabeticamente Indica si se deben ordenar los resultados alfabéticamente.
+   * @param ascendente Indica si se deben ordenar los resultados en orden ascendente.
+   * @returns Array de muebles encontrados.
+   */
+  buscarMuebleByTipo(tipo: string, alfabeticamente: boolean, ascendente: boolean) :Mueble[] {
     const dbMuebles = this._db.getDBMuebles();
     const mueblesArray = dbMuebles.get("Muebles");
     const mueble = mueblesArray.find({ _tipo: tipo }).value();
@@ -137,7 +169,14 @@ export class Stock {
     }
   }
 
-  buscarMuebleByKeyWordsDescripcion(keyWords: string, alfabeticamente: boolean, ascendente: boolean) {
+  /**
+   * Busca muebles en el stock por palabras clave en su descripción.
+   * @param keyWords Palabras clave a buscar en la descripción de los muebles.
+   * @param alfabeticamente Indica si se deben ordenar los resultados alfabéticamente.
+   * @param ascendente Indica si se deben ordenar los resultados en orden ascendente.
+   * @returns Array de muebles encontrados.
+   */
+  buscarMuebleByKeyWordsDescripcion(keyWords: string, alfabeticamente: boolean, ascendente: boolean) :Mueble[] {
     const dbMuebles = this._db.getDBMuebles();
     const mueblesArray = dbMuebles.get("Muebles");
     const muebles = mueblesArray.value();
@@ -159,16 +198,29 @@ export class Stock {
 
   /// <---------------------------------------------- Proveedores ---------------------------------------------->
 
-
-  addProveedor(proveedor: Proveedor) {
+  /**
+   * Añade un nuevo proveedor al sistema.
+   * @param proveedor Objeto de tipo Proveedor que se va a añadir al sistema.
+   */
+  addProveedor(proveedor: Proveedor) :void {
     this._db.addNewProveedor(proveedor);
   }
 
-  removeProveedor(id: number) {
+  /**
+   * Elimina un proveedor del sistema.
+   * @param id Identificador único del proveedor.
+   */
+  removeProveedor(id: number) :void {
     this._db.removeProveedor(id);
   }
 
-  modifyProveedor(id: number, parametro :InfoEntidad, valor :string) {
+  /**
+   * Modifica los atributos de un proveedor específico en el sistema.
+   * @param id Identificador único del proveedor.
+   * @param parametro Parámetro que se va a modificar ('nombre', 'direccion' o 'contacto').
+   * @param valor Nuevo valor del parámetro especificado.
+   */
+  modifyProveedor(id: number, parametro :InfoEntidad, valor :string) :void {
     this._db.getDBProveedores().get("Proveedores").value().forEach(proveedor => {
       if (proveedor.id === id) {
         switch (parametro) {
@@ -188,7 +240,12 @@ export class Stock {
     });
   }
 
-  buscarProveedorByNombre(nombre: string) {
+  /**
+   * Busca proveedores en el sistema por su nombre.
+   * @param nombre Nombre del proveedor a buscar.
+   * @returns Array de proveedores encontrados.
+   */
+  buscarProveedorByNombre(nombre: string) :Proveedor[] {
     const dbProveedores = this._db.getDBProveedores();
     const proveedoresArray = dbProveedores.get("Proveedores");
     const proveedor = proveedoresArray.filter(proveedor => proveedor._nombre === nombre).value();
@@ -199,7 +256,12 @@ export class Stock {
     }
   }
 
-  buscarProveedorByContacto(contacto: string) {
+  /**
+   * Busca proveedores en el sistema por su contacto.
+   * @param contacto Contacto del proveedor a buscar.
+   * @returns Array de proveedores encontrados.
+   */
+  buscarProveedorByContacto(contacto: string) :Proveedor[] {
     const dbProveedores = this._db.getDBProveedores();
     const proveedoresArray = dbProveedores.get("Proveedores");
     const proveedor = proveedoresArray.filter(proveedor => proveedor._contacto === contacto).value();
@@ -210,7 +272,12 @@ export class Stock {
     }
   }
 
-  buscarProveedorByDireccion(direccion: string) {
+  /**
+   * Busca proveedores en el sistema por su dirección.
+   * @param direccion Dirección del proveedor a buscar.
+   * @returns Array de proveedores encontrados.
+   */
+  buscarProveedorByDireccion(direccion: string) :Proveedor[] {
     const dbProveedores = this._db.getDBProveedores();
     const proveedoresArray = dbProveedores.get("Proveedores");
     const proveedor = proveedoresArray.filter(proveedor => proveedor._direccion === direccion).value();
@@ -223,16 +290,29 @@ export class Stock {
 
   /// <---------------------------------------------- Clientes ---------------------------------------------->
 
-
-  addCliente(cliente: Cliente) {
+  /**
+   * Añade un nuevo cliente al sistema.
+   * @param cliente Objeto de tipo Cliente que se va a añadir al sistema.
+   */
+  addCliente(cliente: Cliente) :void {
     this._db.addNewCliente(cliente);
   }
 
-  removeCliente(id: number) {
+  /**
+   * Elimina un cliente del sistema.
+   * @param id Identificador único del cliente.
+   */
+  removeCliente(id: number) :void {
     this._db.removeCliente(id);
   }
 
-  modifyCliente(id: number, parametro :InfoEntidad, valor :string) {
+  /**
+   * Modifica los atributos de un cliente específico en el sistema.
+   * @param id Identificador único del cliente.
+   * @param parametro Parámetro que se va a modificar ('nombre', 'direccion' o 'contacto').
+   * @param valor Nuevo valor del parámetro especificado.
+   */
+  modifyCliente(id: number, parametro :InfoEntidad, valor :string) :void {
     this._db.getDBClientes().get("Clientes").value().forEach(cliente => {
       if (cliente.id === id) {
         switch (parametro) {
@@ -252,7 +332,12 @@ export class Stock {
     });
   }
 
-  buscarClienteByNombre(nombre: string) {
+  /**
+   * Busca clientes en el sistema por su nombre.
+   * @param nombre Nombre del cliente a buscar.
+   * @returns Array de clientes encontrados.
+   */
+  buscarClienteByNombre(nombre: string) :Cliente[] {
     const dbClientes = this._db.getDBClientes();
     const clientesArray = dbClientes.get("Clientes");
     const cliente = clientesArray.filter(cliente => cliente._nombre === nombre).value();
@@ -263,7 +348,12 @@ export class Stock {
     }
   }
 
-  buscarClienteByContacto(contacto: string) {
+  /**
+   * Busca clientes en el sistema por su contacto.
+   * @param contacto Contacto del cliente a buscar.
+   * @returns Array de clientes encontrados.
+   */
+  buscarClienteByContacto(contacto: string) :Cliente[] {
     const dbClientes = this._db.getDBClientes();
     const clientesArray = dbClientes.get("Clientes");
     const cliente = clientesArray.filter(cliente => cliente._contacto === contacto).value();
@@ -274,7 +364,12 @@ export class Stock {
     }
   }
 
-  buscarClienteByDireccion(direccion: string) {
+  /**
+   * Busca clientes en el sistema por su dirección.
+   * @param direccion Dirección del cliente a buscar.
+   * @returns Array de clientes encontrados.
+   */
+  buscarClienteByDireccion(direccion: string) :Cliente[] {
     const dbClientes = this._db.getDBClientes();
     const clientesArray = dbClientes.get("Clientes");
     const cliente = clientesArray.filter(cliente => cliente._direccion === direccion).value();
@@ -287,7 +382,13 @@ export class Stock {
 
   /// <---------------------------------------------- Transacciones ---------------------------------------------->
 
-  ventaMueble(idMueble: number, idCliente: number, cantidad: number) {
+  /**
+   * Registra la venta de un mueble a un cliente.
+   * @param idMueble Identificador único del mueble vendido.
+   * @param idCliente Identificador único del cliente que realiza la compra.
+   * @param cantidad Cantidad de muebles vendidos.
+   */
+  ventaMueble(idMueble: number, idCliente: number, cantidad: number) :void {
     const existe_mueble = this._db.getDBMuebles().get("Muebles").find({_id: idMueble}).value()
     if (!existe_mueble) throw new Error('No se ha encontrado el mueble con el id proporcionado');
     const cliente = this._db.getDBClientes().get("Clientes").find({_id: idCliente}).value();
@@ -306,7 +407,13 @@ export class Stock {
     this._db.addNewTransaccion(transaccion);
   }
 
-  compraMueble(idMueble: number, idProveedor: number, cantidad: number) {
+  /**
+   * Registra la compra de muebles a un proveedor.
+   * @param idMueble Identificador único del mueble comprado.
+   * @param idProveedor Identificador único del proveedor que realiza la venta.
+   * @param cantidad Cantidad de muebles comprados.
+   */
+  compraMueble(idMueble: number, idProveedor: number, cantidad: number) :void {
     const existe_mueble = this._db.getDBMuebles().get("Muebles").find({_id: idMueble}).value()
     if (!existe_mueble) throw new Error('No se ha encontrado el mueble con el id proporcionado');
     const proveedor = this._db.getDBProveedores().get("Proveedores").find({_id: idProveedor}).value();
@@ -325,7 +432,13 @@ export class Stock {
     this._db.addNewTransaccion(transaccion);
   }
 
-  devolucionCliente(idMueble: number, idCliente: number, cantidad: number) {
+  /**
+   * Registra la devolución de un mueble por parte de un cliente.
+   * @param idMueble Identificador único del mueble devuelto.
+   * @param idCliente Identificador único del cliente que realiza la devolución.
+   * @param cantidad Cantidad de muebles devueltos.
+   */
+  devolucionCliente(idMueble: number, idCliente: number, cantidad: number) :void {
     const transaccion_previa = this._db.getDBTransaccion().get("Transacciones").find({id_mueble: idMueble, id_implicado: idCliente, type: 'Venta'}).value();
     if (!transaccion_previa) throw new Error('No se ha encontrado la transacción previa con el id proporcionado, por lo que no se puede realizar la devolución');
     const cliente = this._db.getDBClientes().get("Clientes").find({_id: idCliente}).value();
@@ -344,7 +457,13 @@ export class Stock {
     this._db.addNewTransaccion(transaccion);
   }
 
-  devolucionProveedor(idMueble: number, idProveedor: number, cantidad: number) {
+  /**
+   * Registra la devolución de un mueble al proveedor.
+   * @param idMueble Identificador único del mueble devuelto.
+   * @param idProveedor Identificador único del proveedor al que se devuelve el mueble.
+   * @param cantidad Cantidad de muebles devueltos.
+   */
+  devolucionProveedor(idMueble: number, idProveedor: number, cantidad: number) :void {
     const transaccion_previa = this._db.getDBTransaccion().get("Transacciones").find({id_mueble: idMueble, id_implicado: idProveedor, type: 'Compra'}).value();
     if (!transaccion_previa) throw new Error('No se ha encontrado la transacción previa con el id proporcionado, por lo que no se puede realizar la devolución');
     const proveedor = this._db.getDBProveedores().get("Proveedores").find({_id: idProveedor}).value();
@@ -363,7 +482,12 @@ export class Stock {
     this._db.addNewTransaccion(transaccion);
   }
 
-  obtenerNuevoID(param :'Muebles' | 'Clientes' | 'Proveedores' | 'Transacciones') {
+  /**
+   * Obtiene un nuevo ID para una entidad específica (Muebles, Clientes, Proveedores o Transacciones).
+   * @param param Parámetro que especifica la entidad para la cual se desea obtener un nuevo ID.
+   * @returns Nuevo ID para la entidad especificada.
+   */
+  obtenerNuevoID(param :'Muebles' | 'Clientes' | 'Proveedores' | 'Transacciones') :number {
     switch (param) {
       case 'Muebles':
         return this._db.getDBMuebles().get("Muebles").value().length + 1;
@@ -380,6 +504,10 @@ export class Stock {
 
   // <---------------------------------------------- Informes ---------------------------------------------->
   
+  /**
+   * Genera un informe histórico de ventas.
+   * @returns Objeto con el total de ventas realizadas, la cantidad total de muebles vendidos y el importe total de las ventas.
+   */
   informeVentasHistorico() {
     const totalVentas = this._db.getDBTransaccion().get("Transacciones").filter({type: 'Venta'}).size().value();
     const cantidadMueblesVendidos = this._db.getDBTransaccion().get("Transacciones").filter({type: 'Venta'}).map('num_productos').value().reduce((a, b) => a + b, 0);
@@ -391,6 +519,12 @@ export class Stock {
     };
   }
 
+  /**
+   * Genera un informe mensual de ventas.
+   * @param mes Mes para el cual se desea generar el informe.
+   * @param anio Año para el cual se desea generar el informe.
+   * @returns Objeto con el total de ventas realizadas en el mes especificado, la cantidad total de muebles vendidos y el importe total de las ventas.
+   */
   informeVentasMensual(mes :number, anio :number) {
     const ventas = this._db.getDBTransaccion().get("Transacciones").filter({ type: 'Venta' }).value();
     const filteredVentas = ventas.filter(transaccion => {
@@ -407,6 +541,10 @@ export class Stock {
     };
   }
 
+  /**
+   * Genera un informe histórico de compras.
+   * @returns Objeto con el total de compras realizadas, la cantidad total de muebles comprados y el importe total de las compras.
+   */
   informeComprasHistorico() {
     const totalCompras = this._db.getDBTransaccion().get("Transacciones").filter({type: 'Compra'}).size().value();
     const cantidadMueblesComprados = this._db.getDBTransaccion().get("Transacciones").filter({type: 'Compra'}).map('num_productos').value().reduce((a, b) => a + b, 0);
@@ -418,6 +556,12 @@ export class Stock {
     };
   }
 
+  /**
+   * Genera un informe mensual de compras.
+   * @param mes Mes para el cual se desea generar el informe.
+   * @param anio Año para el cual se desea generar el informe.
+   * @returns Objeto con el total de compras realizadas en el mes especificado, la cantidad total de muebles comprados y el importe total de las compras.
+   */
   informeComprasMensual(mes :number, anio :number) {
     const compras = this._db.getDBTransaccion().get("Transacciones").filter({ type: 'Compra' }).value();
     const filteredCompras = compras.filter(transaccion => {
@@ -434,6 +578,10 @@ export class Stock {
     };
   }
 
+  /**
+   * Genera un informe del stock de muebles.
+   * @returns Lista de objetos con el ID, nombre y cantidad en stock de cada mueble.
+   */
   informeStockMuebles() {
     const muebles = this._db.getDBMuebles().get("Muebles").value();
     const stock = muebles.map(mueble => {
@@ -446,6 +594,11 @@ export class Stock {
     return stock;
   }
 
+  /**
+   * Genera un informe del stock de muebles de un tipo específico.
+   * @param tipo Tipo de mueble para el cual se desea generar el informe.
+   * @returns Lista de objetos con el ID, nombre y cantidad en stock de cada mueble del tipo especificado.
+   */
   informeStockMueblesPorTipo(tipo: string) {
     const muebles = this._db.getDBMuebles().get("Muebles").filter({ _tipo: tipo }).value();
     const stock = muebles.map(mueble => {
@@ -458,6 +611,10 @@ export class Stock {
     return stock;
   }
 
+  /**
+   * Genera un informe del mueble más vendido.
+   * @returns Objeto con el ID, nombre y cantidad vendida del mueble más vendido.
+   */
   informeMuebleMasVendido() {
     const ventas = this._db.getDBTransaccion().get("Transacciones").filter({type: 'Venta'}).value();
     const muebles = this._db.getDBMuebles().get("Muebles").value();
@@ -473,15 +630,18 @@ export class Stock {
     return muebleMasVendido;
   }
 
+  /**
+   * Genera un informe del tipo de mueble más vendido.
+   * @returns Objeto con el tipo de mueble más vendido y la cantidad total vendida.
+   */
   informeTipoMuebleMasVendido() {
     const ventas = this._db.getDBTransaccion().get("Transacciones").filter({type: 'Venta'}).value();
     const muebles = this._db.getDBMuebles().get("Muebles").value();
     const tipos = muebles.map(mueble => mueble._tipo);
     const tiposUnicos = tipos.filter((v, i, a) => a.indexOf(v) === i);
     const mueblesVendidos = tiposUnicos.map(tipo => {
-      const mueble = muebles.find(mueble => mueble._tipo === tipo);
-      const cantidadVendida = mueble ? ventas.filter(venta => venta.id_mueble === mueble._id).map(venta => venta.num_productos).reduce((a, b) => a + b, 0)
-                                     : 0;
+      const idMuebles = muebles.filter(mueble => mueble._tipo === tipo).map(mueble => mueble._id);
+      const cantidadVendida = ventas.filter(venta => idMuebles.includes(venta.id_mueble)).map(venta => venta.num_productos).reduce((a, b) => a + b, 0);
       return {
         tipo: tipo,
         cantidad_vendida: cantidadVendida
@@ -491,12 +651,22 @@ export class Stock {
     return tipoMuebleMasVendido;
   }
 
-  informeVentasAClienteConcreto(idCliente: number) {
+  /**
+   * Genera un informe de las ventas realizadas a un cliente específico.
+   * @param idCliente ID del cliente para el cual se desea generar el informe.
+   * @returns Lista de objetos con los detalles de las ventas realizadas al cliente especificado.
+   */
+  informeVentasAClienteConcreto(idCliente: number) :Transaccion[] {
     const compras = this._db.getDBTransaccion().get("Transacciones").filter({id_implicado: idCliente, type: 'Venta'}).value();
     return compras;
   }
 
-  informeComprasAProveedorConcreto(idProveedor: number) {
+  /**
+   * Genera un informe de las compras realizadas a un proveedor específico.
+   * @param idProveedor ID del proveedor para el cual se desea generar el informe.
+   * @returns Lista de objetos con los detalles de las compras realizadas al proveedor especificado.
+   */
+  informeComprasAProveedorConcreto(idProveedor: number) :Transaccion[] {
     const compras = this._db.getDBTransaccion().get("Transacciones").filter({id_implicado: idProveedor, type: 'Compra'}).value();
     return compras;
   }
