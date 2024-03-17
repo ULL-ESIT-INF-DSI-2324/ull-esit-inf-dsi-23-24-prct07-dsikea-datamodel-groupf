@@ -14,6 +14,9 @@ export class Stock {
 
 	constructor() {}
 
+  /// <---------------------------------------------- Muebles ---------------------------------------------->
+
+
   addNewMueble(mueble: Mueble) {
     this._db.addNewMueble(mueble);
   }
@@ -154,6 +157,9 @@ export class Stock {
     }
   }
 
+  /// <---------------------------------------------- Proveedores ---------------------------------------------->
+
+
   addProveedor(proveedor: Proveedor) {
     this._db.addNewProveedor(proveedor);
   }
@@ -215,6 +221,9 @@ export class Stock {
     }
   }
 
+  /// <---------------------------------------------- Clientes ---------------------------------------------->
+
+
   addCliente(cliente: Cliente) {
     this._db.addNewCliente(cliente);
   }
@@ -275,6 +284,8 @@ export class Stock {
       throw new Error('No se ha encontrado el cliente con la dirección proporcionada');
     }
   }
+
+  /// <---------------------------------------------- Transacciones ---------------------------------------------->
 
   ventaMueble(idMueble: number, idCliente: number, cantidad: number) {
     const existe_mueble = this._db.getDBMuebles().get("Muebles").find({_id: idMueble}).value()
@@ -365,5 +376,128 @@ export class Stock {
       default:
         throw new Error('No se ha encontrado el parámetro proporcionado');
     }
+  }
+
+  // <---------------------------------------------- Informes ---------------------------------------------->
+  
+  informeVentasHistorico() {
+    const totalVentas = this._db.getDBTransaccion().get("Transacciones").filter({type: 'Venta'}).size().value();
+    const cantidadMueblesVendidos = this._db.getDBTransaccion().get("Transacciones").filter({type: 'Venta'}).map('num_productos').value().reduce((a, b) => a + b, 0);
+    const importeTotalVentas = this._db.getDBTransaccion().get("Transacciones").filter({type: 'Venta'}).map('amount').value().reduce((a, b) => a + b, 0);
+    return {
+      ventas_realizadas: totalVentas, 
+      cantidad_muebles_vendidos: cantidadMueblesVendidos,
+      importe_total_ventas: importeTotalVentas
+    };
+  }
+
+  informeVentasMensual(mes :number, anio :number) {
+    const ventas = this._db.getDBTransaccion().get("Transacciones").filter({ type: 'Venta' }).value();
+    const filteredVentas = ventas.filter(transaccion => {
+      const transactionDate = new Date(transaccion.date);
+      return transactionDate.getMonth() === mes - 1 && transactionDate.getFullYear() === anio;
+    });
+    const totalVentas = filteredVentas.length;
+    const cantidadMueblesVendidos = filteredVentas.map(venta => venta.num_productos).reduce((a, b) => a + b, 0);
+    const importeTotalVentas = filteredVentas.reduce((total, transaccion) => total + transaccion.amount, 0);
+    return {
+      ventas_realizadas: totalVentas,
+      cantidad_muebles_vendidos: cantidadMueblesVendidos,
+      importe_total_ventas: importeTotalVentas
+    };
+  }
+
+  informeComprasHistorico() {
+    const totalCompras = this._db.getDBTransaccion().get("Transacciones").filter({type: 'Compra'}).size().value();
+    const cantidadMueblesComprados = this._db.getDBTransaccion().get("Transacciones").filter({type: 'Compra'}).map('num_productos').value().reduce((a, b) => a + b, 0);
+    const importeTotalCompras = this._db.getDBTransaccion().get("Transacciones").filter({type: 'Compra'}).map('amount').value().reduce((a, b) => a + b, 0);
+    return {
+      compras_realizadas: totalCompras, 
+      cantidad_muebles_comprados: cantidadMueblesComprados,
+      importe_total_compras: importeTotalCompras
+    };
+  }
+
+  informeComprasMensual(mes :number, anio :number) {
+    const compras = this._db.getDBTransaccion().get("Transacciones").filter({ type: 'Compra' }).value();
+    const filteredCompras = compras.filter(transaccion => {
+      const transactionDate = new Date(transaccion.date);
+      return transactionDate.getMonth() === mes - 1 && transactionDate.getFullYear() === anio;
+    });
+    const totalCompras = filteredCompras.length;
+    const cantidadMueblesComprados = filteredCompras.map(compra => compra.num_productos).reduce((a, b) => a + b, 0);
+    const importeTotalCompras = filteredCompras.reduce((total, transaccion) => total + transaccion.amount, 0);
+    return {
+      compras_realizadas: totalCompras,
+      cantidad_muebles_comprados: cantidadMueblesComprados,
+      importe_total_compras: importeTotalCompras
+    };
+  }
+
+  informeStockMuebles() {
+    const muebles = this._db.getDBMuebles().get("Muebles").value();
+    const stock = muebles.map(mueble => {
+      return {
+        id: mueble._id,
+        nombre: mueble._nombre,
+        cantidad: mueble._cantidad
+      };
+    });
+    return stock;
+  }
+
+  informeStockMueblesPorTipo(tipo: string) {
+    const muebles = this._db.getDBMuebles().get("Muebles").filter({ _tipo: tipo }).value();
+    const stock = muebles.map(mueble => {
+      return {
+        id: mueble._id,
+        nombre: mueble._nombre,
+        cantidad: mueble._cantidad
+      };
+    });
+    return stock;
+  }
+
+  informeMuebleMasVendido() {
+    const ventas = this._db.getDBTransaccion().get("Transacciones").filter({type: 'Venta'}).value();
+    const muebles = this._db.getDBMuebles().get("Muebles").value();
+    const mueblesVendidos = muebles.map(mueble => {
+      const cantidadVendida = ventas.filter(venta => venta.id_mueble === mueble._id).map(venta => venta.num_productos).reduce((a, b) => a + b, 0);
+      return {
+        id: mueble._id,
+        nombre: mueble._nombre,
+        cantidad_vendida: cantidadVendida
+      };
+    });
+    const muebleMasVendido = mueblesVendidos.reduce((prev, current) => (prev.cantidad_vendida > current.cantidad_vendida) ? prev : current);
+    return muebleMasVendido;
+  }
+
+  informeTipoMuebleMasVendido() {
+    const ventas = this._db.getDBTransaccion().get("Transacciones").filter({type: 'Venta'}).value();
+    const muebles = this._db.getDBMuebles().get("Muebles").value();
+    const tipos = muebles.map(mueble => mueble._tipo);
+    const tiposUnicos = tipos.filter((v, i, a) => a.indexOf(v) === i);
+    const mueblesVendidos = tiposUnicos.map(tipo => {
+      const mueble = muebles.find(mueble => mueble._tipo === tipo);
+      const cantidadVendida = mueble ? ventas.filter(venta => venta.id_mueble === mueble._id).map(venta => venta.num_productos).reduce((a, b) => a + b, 0)
+                                     : 0;
+      return {
+        tipo: tipo,
+        cantidad_vendida: cantidadVendida
+      };
+    });
+    const tipoMuebleMasVendido = mueblesVendidos.reduce((prev, current) => (prev.cantidad_vendida > current.cantidad_vendida) ? prev : current);
+    return tipoMuebleMasVendido;
+  }
+
+  informeVentasAClienteConcreto(idCliente: number) {
+    const compras = this._db.getDBTransaccion().get("Transacciones").filter({id_implicado: idCliente, type: 'Venta'}).value();
+    return compras;
+  }
+
+  informeComprasAProveedorConcreto(idProveedor: number) {
+    const compras = this._db.getDBTransaccion().get("Transacciones").filter({id_implicado: idProveedor, type: 'Compra'}).value();
+    return compras;
   }
 }

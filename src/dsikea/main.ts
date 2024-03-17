@@ -4,11 +4,6 @@ import { Mueble } from './mueble.js';
 import { Proveedor } from './proveedor.js';
 import { Cliente } from './cliente.js';
 
-// Instanciar la clase Stock para gestionar la información del sistema
-// const mueble_1 :Silla = new Silla(5, "Silla1", "Una bonita silla",'Madera', "5x5x5", 30, "Marrón");
-// const mueble_2 :Comoda = new Comoda(6, "Silla1", "Una bonita comoda",'Madera', "5x5x5", 30, 5);
-// const muebles = new ColeccionMuebles([mueble_1, mueble_2]);
-
 const stock = new Stock();
 
 // Función principal para interactuar con la aplicación
@@ -25,6 +20,7 @@ async function main() {
             'Gestionar muebles',
             'Gestionar proveedores',
             'Gestionar clientes',
+            'Generar Informes',
             'Salir'
         ]
     });
@@ -41,6 +37,9 @@ async function main() {
             break;
         case 'Gestionar clientes':
             await gestionarClientes();
+            break;
+        case 'Generar Informes':
+            await generarInformes();
             break;
         case 'Salir':
             console.log('Gracias por usar el sistema. ¡Hasta luego!');
@@ -109,7 +108,7 @@ async function realizarVenta() {
     } catch (error) {
         console.error(error.message);
     }
-    await main();
+    await realizarTransaccion();
 }
 
 async function realizarCompra() {
@@ -139,7 +138,7 @@ async function realizarCompra() {
     } catch (error) {
         console.error(error.message);
     }
-    await main();
+    await realizarTransaccion();
 }
 
 async function realizarDevolucion() {
@@ -197,7 +196,7 @@ async function devolucionCliente() {
     } catch (error) {
         console.error(error.message);
     }
-    await main();
+    await realizarTransaccion();
 }
 
 async function devolucionProveedor() {
@@ -227,7 +226,7 @@ async function devolucionProveedor() {
     } catch (error) {
         console.error(error.message);
     }
-    await main();
+    await realizarTransaccion();
 }
 
 /// ------------------------------------- Muebles --------------------------------------------------------------
@@ -318,7 +317,7 @@ async function anadirMuebleExistente() {
     } catch (error) {
         console.error(error.message);
     }
-    await main();
+    await gestionarMuebles();
 }
 
 async function anadirMuebleNuevo() {
@@ -377,7 +376,7 @@ async function anadirMuebleNuevo() {
 
     console.log(`${mueble.nombre} agregada al stock.`);
 
-    await main();
+    await gestionarMuebles();
 }
 
 async function borrarMueble() {
@@ -400,7 +399,7 @@ async function borrarMueble() {
     } catch (error) {
         console.error(error.message);
     }
-    await main();
+    await gestionarMuebles();
 }
 
 async function modificarMueble() {
@@ -517,7 +516,7 @@ async function modificarMueble() {
             await gestionarMuebles();
             break;
     }
-    await main();
+    await gestionarMuebles();
 }
 
 async function buscarMuebles() {
@@ -593,7 +592,7 @@ async function buscarMueblePorNombre() {
     } catch (error) {
         console.error(error.message);
     }
-    await main();
+    await gestionarMuebles();
 }
 
 async function buscarMueblePorTipo() {
@@ -638,7 +637,7 @@ async function buscarMueblePorTipo() {
     } catch (error) {
         console.error(error.message);
     }
-    await main();
+    await gestionarMuebles();
 }
 
 async function buscarMueblePorDescripcion() {
@@ -683,7 +682,7 @@ async function buscarMueblePorDescripcion() {
     } catch (error) {
         console.error(error.message);
     }
-    await main();
+    await gestionarMuebles();
 }
 
 /// ------------------------------------- Proveedores --------------------------------------------------------------
@@ -759,7 +758,7 @@ async function addProveedor() {
     } catch (error) {
         console.error(error.message);
     }
-    await main();
+    await gestionarProveedores();
 }
 
 async function borrarProveedor() {
@@ -777,7 +776,7 @@ async function borrarProveedor() {
     } catch (error) {
         console.error(error.message);
     }
-    await main();
+    await gestionarProveedores();
 }
 
 
@@ -849,7 +848,7 @@ async function modifyProveedor() {
             await gestionarProveedores();
             break;
     }
-    await main();
+    await gestionarProveedores();
 }
 
 async function buscarProveedor() {
@@ -914,10 +913,10 @@ async function buscarProveedor() {
             break;
         }
         case 'Volver':
-            await main();
+            await gestionarProveedores();
             return;
     }
-    await main();
+    await gestionarProveedores();
 }
 
 /// ------------------------------------- Clientes --------------------------------------------------------------
@@ -993,7 +992,7 @@ async function anadirCliente() {
     } catch (error) {
         console.error(error.message);
     }
-    await main();
+    await gestionarClientes();
 }
 
 async function borrarCliente() {
@@ -1011,7 +1010,7 @@ async function borrarCliente() {
     } catch (error) {
         console.error(error.message);
     }
-    await main();
+    await gestionarClientes();
 }
 
 async function modificarCliente() {
@@ -1082,7 +1081,7 @@ async function modificarCliente() {
             await gestionarClientes();
             break;
     }
-    await main();
+    await gestionarClientes();
 }
 
 async function buscarCliente() {
@@ -1147,10 +1146,189 @@ async function buscarCliente() {
             break;
         }
         case 'Volver':
-            await main();
+            await gestionarClientes();
             return;
     }
-    await main();
+    await gestionarClientes();
+}
+
+/// ------------------------------------- Informes --------------------------------------------------------------
+async function generarInformes() {
+    console.log('\nGenerar informes:');
+
+    // Mostrar opciones para generar informes
+    const { option } = await inquirer.prompt({
+        type: 'list',
+        name: 'option',
+        message: 'Selecciona una opción:',
+        choices: [
+            'Informes de muebles',
+            'Informes de ventas',
+            'Informes de compras',
+            'Volver'
+        ]
+    });
+
+    switch (option) {
+        case 'Informes de muebles':
+            await informeMuebles();
+            break;
+        case 'Informes de ventas':
+            await informeVentas();
+            break;
+        case 'Informes de compras':
+            await informeCompras();
+            break;
+        case 'Volver':
+            // Volver al menú principal
+            await main();
+            break;
+    }
+}
+
+async function informeMuebles() {
+    console.log('\nInforme de stock actual muebles:');
+
+    const { option } = await inquirer.prompt({
+        type: 'list',
+        name: 'option',
+        message: 'Selecciona una opción:',
+        choices: [
+            'Informe de stock actual muebles',
+            'Informe de stock actual muebles por tipo',
+            'Informe de mueble más vendido',
+            'Informe de tipo de mueble más vendido',
+            'Volver'
+        ]
+    });
+
+    switch (option) {
+        case 'Informe de stock actual muebles': {
+            console.log('Informe de stock actual muebles:');
+            console.table(stock.informeStockMuebles());
+            break;
+        } case 'Informe de stock actual muebles por tipo': {
+            console.log('Informe de stock actual muebles por tipo:');
+            const { tipo } = await inquirer.prompt({
+                type: 'input',
+                name: 'tipo',
+                message: 'Ingrese el tipo de mueble del que quiere generar el informe:'
+            });
+            console.table(stock.informeStockMueblesPorTipo(tipo));
+            break;
+        } case 'Informe de mueble más vendido': {
+            console.log('Informe de mueble más vendido:');
+            console.table(stock.informeMuebleMasVendido());
+            break;
+        } case 'Informe de tipo de mueble más vendido': {
+            console.log('Informe de tipo de mueble más vendido:');
+            console.table(stock.informeTipoMuebleMasVendido());
+            break;
+        } case 'Volver':
+            await generarInformes();
+            return;
+    }
+    await generarInformes();
+}
+
+async function informeVentas() {
+    console.log('\nInforme de ventas:');
+
+    const { option } = await inquirer.prompt({
+        type: 'list',
+        name: 'option',
+        message: 'Selecciona una opción:',
+        choices: [
+            'Informe ventas en un mes concreto',
+            'Informe de ventas histórico',
+            'Informe de ventas a un cliente concreto',
+            'Volver'
+        ]
+    });
+
+    switch (option) {
+        case 'Informe ventas en un mes concreto': {
+            const { mes } = await inquirer.prompt({
+                type: 'number',
+                name: 'mes',
+                message: 'Ingrese el mes (1 - 12) del que quiere generar el informe:'
+            });
+            const { anio } = await inquirer.prompt({
+                type: 'number',
+                name: 'anio',
+                message: 'Ingrese el año del que quiere generar el informe:'
+            });
+            console.log('Informe de ventas en el mes ' + mes + ' del año ' + anio + ':');
+            console.table(stock.informeVentasMensual(mes, anio));
+            break;
+        } case 'Informe de ventas histórico': {
+            console.log('Informe de ventas histórico:');
+            console.table(stock.informeVentasHistorico());
+            break;
+        } case 'Informe de ventas a un cliente concreto': {
+            const { idCliente } = await inquirer.prompt({
+                type: 'number',
+                name: 'idCliente',
+                message: 'Ingrese el ID del cliente del que quiere generar el informe:'
+            });
+            console.log('Informe de ventas del cliente ' + idCliente + ':');
+            console.table(stock.informeVentasAClienteConcreto(idCliente));
+            break;
+        } case 'Volver':
+            await generarInformes();
+            return;
+    }
+    await generarInformes();
+}
+
+async function informeCompras() {
+    console.log('\nInforme de compras:');
+
+    const { option } = await inquirer.prompt({
+        type: 'list',
+        name: 'option',
+        message: 'Selecciona una opción:',
+        choices: [
+            'Informe compras en un mes concreto',
+            'Informe de compras histórico',
+            'Informe de compras a un proveedor concreto',
+            'Volver'
+        ]
+    });
+
+    switch (option) {
+        case 'Informe compras en un mes concreto': {
+            const { mes } = await inquirer.prompt({
+                type: 'number',
+                name: 'mes',
+                message: 'Ingrese el mes (1 - 12) del que quiere generar el informe:'
+            });
+            const { anio } = await inquirer.prompt({
+                type: 'number',
+                name: 'anio',
+                message: 'Ingrese el año del que quiere generar el informe:'
+            });
+            console.log('Informe de compras en el mes ' + mes + ' del año ' + anio + ':');
+            console.table(stock.informeComprasMensual(mes, anio));
+            break;
+        } case 'Informe de compras histórico': {
+            console.log('Informe de compras histórico:');
+            console.table(stock.informeComprasHistorico());
+            break;
+        } case 'Informe de compras a un proveedor concreto': {
+            const { idProveedor } = await inquirer.prompt({
+                type: 'number',
+                name: 'idProveedor',
+                message: 'Ingrese el ID del proveedor del que quiere generar el informe:'
+            });
+            console.log('Informe de compras al proveedor ' + idProveedor + ':');
+            console.table(stock.informeComprasAProveedorConcreto(idProveedor));
+            break;
+        } case 'Volver':
+            await generarInformes();
+            return;
+    }
+    await generarInformes();
 }
 
 // Iniciar la aplicación
