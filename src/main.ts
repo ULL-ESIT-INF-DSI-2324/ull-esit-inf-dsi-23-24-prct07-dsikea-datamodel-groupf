@@ -1,8 +1,8 @@
 import inquirer from 'inquirer';
-import { Stock } from './stock.js';
-import { Mueble } from './mueble.js';
-import { Proveedor } from './proveedor.js';
-import { Cliente } from './cliente.js';
+import { Stock } from './dsikea/stock.js';
+import { Mueble } from './dsikea/mueble.js';
+import { Proveedor } from './dsikea/proveedor.js';
+import { Cliente } from './dsikea/cliente.js';
 
 const stock = new Stock();
 

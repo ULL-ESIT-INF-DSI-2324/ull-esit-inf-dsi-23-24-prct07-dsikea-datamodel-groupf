@@ -16,8 +16,6 @@ type InfoEntidad = 'nombre' | 'direccion' | 'contacto';
 export class Stock {
 	private _db: Database = Database.getInstance();
 
-	constructor() {}
-
   get db() {
     return this._db;
   }
