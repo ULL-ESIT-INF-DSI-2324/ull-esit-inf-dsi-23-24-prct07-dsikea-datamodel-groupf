@@ -31,38 +31,6 @@
       "type": "Devolución a Proveedor",
       "num_productos": 2,
       "amount": 160
-    },
-    {
-      "date": "2024-03-17T19:36:45.015Z",
-      "id_mueble": 1,
-      "id_implicado": 1,
-      "type": "Compra",
-      "num_productos": 5,
-      "amount": 5000
-    },
-    {
-      "date": "2024-03-17T19:36:45.018Z",
-      "id_mueble": 1,
-      "id_implicado": 1,
-      "type": "Devolución a Proveedor",
-      "num_productos": 5,
-      "amount": 5000
-    },
-    {
-      "date": "2024-03-17T19:36:45.020Z",
-      "id_mueble": 2,
-      "id_implicado": 2,
-      "type": "Venta",
-      "num_productos": 1,
-      "amount": 400
-    },
-    {
-      "date": "2024-03-17T19:36:45.023Z",
-      "id_mueble": 2,
-      "id_implicado": 2,
-      "type": "Devolución de Cliente",
-      "num_productos": 1,
-      "amount": 400
     }
   ]
 }
