@@ -18,6 +18,10 @@ export class Stock {
 
 	constructor() {}
 
+  get db() {
+    return this._db;
+  }
+
   /// <---------------------------------------------- Muebles ---------------------------------------------->
 
   /**
@@ -56,7 +60,7 @@ export class Stock {
     const existe_id = mueblesArray.find({ _id: id }).value();
     if (existe_id) {
       if (existe_id._cantidad === cantidad) {
-        mueblesArray.remove({ _id: id }).write();
+        this._db.removeMueble(id);
         console.log(`Mueble con ID ${id} eliminado correctamente.`);
         return;
       } else if (existe_id._cantidad < cantidad){
@@ -76,6 +80,8 @@ export class Stock {
    * @param valor Nuevo valor del parámetro especificado.
    */
 	modifyMueble(id: number, parametro :InfoMueble, valor :string | number) :void {
+    const existe_mueble = this._db.getDBMuebles().get("Muebles").find({_id: id}).value()
+    if (!existe_mueble) throw new Error('No se ha encontrado el mueble con el id proporcionado');
     if (this._db.getDBMuebles().get("Muebles").find({_id: id})) {
       switch (parametro) {
         case 'nombre':
@@ -99,11 +105,7 @@ export class Stock {
         case 'cantidad':
           this._db.getDBMuebles().get("Muebles").find({_id: id}).assign({_cantidad: valor}).write();
           break;
-        default:
-          break;
       }
-    } else {
-      throw new Error('No se ha encontrado el mueble con el id proporcionado');
     }
   }
 
@@ -221,6 +223,8 @@ export class Stock {
    * @param valor Nuevo valor del parámetro especificado.
    */
   modifyProveedor(id: number, parametro :InfoEntidad, valor :string) :void {
+    const proveedor_existe = this._db.getDBProveedores().get("Proveedores").find({_id: id}).value();
+    if (!proveedor_existe) throw new Error('No se ha encontrado el proveedor con el id proporcionado');
     this._db.getDBProveedores().get("Proveedores").value().forEach(proveedor => {
       if (proveedor.id === id) {
         switch (parametro) {
@@ -232,8 +236,6 @@ export class Stock {
             break;
           case 'contacto':
             this._db.getDBProveedores().get("Proveedores").find({_id: id}).assign({_contacto: valor}).write();
-            break;
-          default:
             break;
         }
       }
@@ -249,7 +251,7 @@ export class Stock {
     const dbProveedores = this._db.getDBProveedores();
     const proveedoresArray = dbProveedores.get("Proveedores");
     const proveedor = proveedoresArray.filter(proveedor => proveedor._nombre === nombre).value();
-    if (proveedor) {
+    if (proveedor.length > 0) {
       return proveedor;
     } else {
       throw new Error('No se ha encontrado el proveedor con el nombre proporcionado');
@@ -265,7 +267,7 @@ export class Stock {
     const dbProveedores = this._db.getDBProveedores();
     const proveedoresArray = dbProveedores.get("Proveedores");
     const proveedor = proveedoresArray.filter(proveedor => proveedor._contacto === contacto).value();
-    if (proveedor) {
+    if (proveedor.length > 0) {
       return proveedor;
     } else {
       throw new Error('No se ha encontrado el proveedor con el contacto proporcionado');
@@ -281,7 +283,7 @@ export class Stock {
     const dbProveedores = this._db.getDBProveedores();
     const proveedoresArray = dbProveedores.get("Proveedores");
     const proveedor = proveedoresArray.filter(proveedor => proveedor._direccion === direccion).value();
-    if (proveedor) {
+    if (proveedor.length > 0) {
       return proveedor;
     } else {
       throw new Error('No se ha encontrado el proveedor con la dirección proporcionada');
@@ -313,6 +315,8 @@ export class Stock {
    * @param valor Nuevo valor del parámetro especificado.
    */
   modifyCliente(id: number, parametro :InfoEntidad, valor :string) :void {
+    const cliente_existe = this._db.getDBClientes().get("Clientes").find({_id: id}).value();
+    if (!cliente_existe) throw new Error('No se ha encontrado el cliente con el id proporcionado');
     this._db.getDBClientes().get("Clientes").value().forEach(cliente => {
       if (cliente.id === id) {
         switch (parametro) {
@@ -324,8 +328,6 @@ export class Stock {
             break;
           case 'contacto':
             this._db.getDBClientes().get("Clientes").find({_id: id}).assign({_contacto: valor}).write();
-            break;
-          default:
             break;
         }
       }
@@ -341,7 +343,7 @@ export class Stock {
     const dbClientes = this._db.getDBClientes();
     const clientesArray = dbClientes.get("Clientes");
     const cliente = clientesArray.filter(cliente => cliente._nombre === nombre).value();
-    if (cliente) {
+    if (cliente.length > 0) {
       return cliente;
     } else {
       throw new Error('No se ha encontrado el cliente con el nombre proporcionado');
@@ -357,7 +359,7 @@ export class Stock {
     const dbClientes = this._db.getDBClientes();
     const clientesArray = dbClientes.get("Clientes");
     const cliente = clientesArray.filter(cliente => cliente._contacto === contacto).value();
-    if (cliente) {
+    if (cliente.length > 0) {
       return cliente;
     } else {
       throw new Error('No se ha encontrado el cliente con el contacto proporcionado');
@@ -373,7 +375,7 @@ export class Stock {
     const dbClientes = this._db.getDBClientes();
     const clientesArray = dbClientes.get("Clientes");
     const cliente = clientesArray.filter(cliente => cliente._direccion === direccion).value();
-    if (cliente) {
+    if (cliente.length > 0) {
       return cliente;
     } else {
       throw new Error('No se ha encontrado el cliente con la dirección proporcionada');
@@ -439,10 +441,12 @@ export class Stock {
    * @param cantidad Cantidad de muebles devueltos.
    */
   devolucionCliente(idMueble: number, idCliente: number, cantidad: number) :void {
-    const transaccion_previa = this._db.getDBTransaccion().get("Transacciones").find({id_mueble: idMueble, id_implicado: idCliente, type: 'Venta'}).value();
-    if (!transaccion_previa) throw new Error('No se ha encontrado la transacción previa con el id proporcionado, por lo que no se puede realizar la devolución');
+    const mueble = this._db.getDBMuebles().get("Muebles").find({_id: idMueble}).value();
+    if (!mueble) throw new Error('No se ha encontrado el mueble con el id proporcionado');
     const cliente = this._db.getDBClientes().get("Clientes").find({_id: idCliente}).value();
     if (!cliente) throw new Error('No se ha encontrado el cliente con el id proporcionado');
+    const transaccion_previa = this._db.getDBTransaccion().get("Transacciones").find({id_mueble: idMueble, id_implicado: idCliente, type: 'Venta'}).value();
+    if (!transaccion_previa) throw new Error('No se ha encontrado la transacción previa con el id proporcionado, por lo que no se puede realizar la devolución');
     const importe = this._db.getDBMuebles().get("Muebles").find({_id: idMueble}).value()._precio * cantidad;
     /// Existe el mueble y el cliente
     this.addMuebleExistente(idMueble, cantidad);
@@ -464,10 +468,12 @@ export class Stock {
    * @param cantidad Cantidad de muebles devueltos.
    */
   devolucionProveedor(idMueble: number, idProveedor: number, cantidad: number) :void {
-    const transaccion_previa = this._db.getDBTransaccion().get("Transacciones").find({id_mueble: idMueble, id_implicado: idProveedor, type: 'Compra'}).value();
-    if (!transaccion_previa) throw new Error('No se ha encontrado la transacción previa con el id proporcionado, por lo que no se puede realizar la devolución');
+    const mueble = this._db.getDBMuebles().get("Muebles").find({_id: idMueble}).value();
+    if (!mueble) throw new Error('No se ha encontrado el mueble con el id proporcionado');
     const proveedor = this._db.getDBProveedores().get("Proveedores").find({_id: idProveedor}).value();
     if (!proveedor) throw new Error('No se ha encontrado el proveedor con el id proporcionado');
+    const transaccion_previa = this._db.getDBTransaccion().get("Transacciones").find({id_mueble: idMueble, id_implicado: idProveedor, type: 'Compra'}).value();
+    if (!transaccion_previa) throw new Error('No se ha encontrado la transacción previa con el id proporcionado, por lo que no se puede realizar la devolución');
     const importe = this._db.getDBMuebles().get("Muebles").find({_id: idMueble}).value()._precio * cantidad;
     /// Existe el mueble y el proveedor
     this.removeMueble(idMueble, cantidad);
@@ -497,8 +503,6 @@ export class Stock {
         return this._db.getDBProveedores().get("Proveedores").value().length + 1;
       case 'Transacciones':
         return this._db.getDBTransaccion().get("Transacciones").value().length + 1;
-      default:
-        throw new Error('No se ha encontrado el parámetro proporcionado');
     }
   }
 
